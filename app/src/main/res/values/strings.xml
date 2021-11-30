@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Zoom部屋オンライン予約システム</string>
+    <string name="title">Co-Reserve</string>
+    <string name="login">ログイン</string>
+    <string name="home">さん</string>
+    <string name="number">学籍番号：</string>
+    <string name="reserved">次回の予約は、</string>
+    <string name="date_temp">〇〇月〇〇日△時◇◇分</string>
+    <string name="reserve_1">日付を選んでください</string>
+    <string name="desu">です。</string>
+
+    <string name="time_reserve_s">開始予定時刻：</string>
+    <string name="time_reserve_e">終了予定時刻：</string>
+    <string-array name="time_list_h">
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+    </string-array>
+    <string-array name="time_list_m">
+        <item>00</item>
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+    </string-array>
+    <string-array name="room_num">
+        <item>room 1</item>
+        <item>room 2</item>
+        <item>room 3</item>
+        <item>room 4</item>
+        <item>room 5</item>
+        <item>room 6</item>
+        <item>room 7</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
