@@ -46,6 +46,7 @@ class LockUnlock : AppCompatActivity() {
         }
         quit_btn.setOnClickListener {
             val intent = Intent(this, CheckSheet::class.java)
+            intent.putExtra("ROOM", ro_number)
             startActivity(intent)
         }
 

@@ -9,10 +9,18 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-class ListAdapter(context: Context, userList: ArrayList<String>): BaseAdapter(){
+private val database = FirebaseDatabase.getInstance()
+private val bookRef = database.getReference("booking")
+
+class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>): BaseAdapter(){
     private val context = context
     private val userList = userList
+    private val dateList = DateList
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View = LayoutInflater.from(context).inflate(R.layout.item_reserve, null)
         val textView = view.findViewById<TextView>(R.id.reserve_tv)
@@ -29,9 +37,29 @@ class ListAdapter(context: Context, userList: ArrayList<String>): BaseAdapter(){
         remover.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("予約取消")
-                    .setMessage("${reserve}で登録した予約を取り消します。\nよろしいですか？")
+                    .setMessage("${reserve}の予約を取り消します。\nよろしいですか？")
                     .setPositiveButton("取消", DialogInterface.OnClickListener { dialog, which ->
-                        Toast.makeText(context, "予約を取り消しました", Toast.LENGTH_SHORT).show()
+                        val date = dateList[position] / 1000000000
+                        val bookStart = dateList[position] / 100000 % 10000
+                        val room = dateList[position] % 10
+                        bookRef.orderByChild("date").equalTo("$date").addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                var res = ""
+                                for (i in snapshot.children) {
+                                    val keyStart = i.child("book_start").value.toString().toLong()
+                                    val keyRoom = i.child("room").value.toString().toLong()
+                                    if (keyStart == bookStart && keyRoom == room) {
+                                        res = i.key.toString()
+                                        bookRef.child(res).removeValue()
+                                    }
+                                }
+                                Toast.makeText(context, "予約を取り消しました", Toast.LENGTH_SHORT).show()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Toast.makeText(context, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
+                            }
+                        })
                     })
                     .setNegativeButton("戻る", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()

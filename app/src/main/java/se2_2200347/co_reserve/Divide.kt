@@ -7,14 +7,18 @@ package se2_2200347.co_reserve
 class Divide(l : Long) {
     private val org = l
 
-    fun div12() : String {
+    fun div12() : Array<String> {
         val year = org / 100000000
         val month = format02(org / 1000000 % 100)
         val day = format02(org / 10000 % 100)
         val hour = format02(org / 100 % 100)
         val min = format02(org % 100)
+        var array = arrayOf(
+            "${hour}:${min}～",
+            "${year}/${month}/${day}"
+        )
 
-        return "$year/$month/$day、$hour:${min}から"
+        return array
     }
 
     fun div17() : String {
@@ -27,7 +31,7 @@ class Divide(l : Long) {
         val endMin = format02(org / 10 % 100)
         val room = org % 10
 
-        return "$year/$month/$day $firstHour:$firstMin~$endHour:$endMin\n${room}番部屋"
+        return "${year}年${month}月${day}日\n${firstHour}時${firstMin}分～${endHour}時${endMin}分\n${room}番部屋"
     }
     private fun format02(l: Long) : String {
         return "%02d".format(l)

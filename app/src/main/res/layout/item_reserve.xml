@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="ここに日時と部屋番号が表示されるよ"
-                    android:textSize="16dp" />
+                    android:textSize="20dp" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

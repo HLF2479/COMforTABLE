@@ -1,12 +1,14 @@
 package se2_2200347.co_reserve
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -44,16 +46,24 @@ class MainActivity : AppCompatActivity() {
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             var reff = arrayListOf<Long>()
-                            for (i in snapshot.children) {
-                                val date = i.child("date").value.toString().toLong()
-                                var convD = date * 10000
-                                val time = i.child("book_start").value.toString().toLong()
-                                convD += time
-                                reff.add(convD)
+                            try {
+                                for (i in snapshot.children) {
+                                    val date = i.child("date").value.toString().toLong()
+                                    var convD = date * 10000
+                                    val time = i.child("book_start").value.toString().toLong()
+                                    convD += time
+                                    reff.add(convD)
+                                }
+                                reff.sort()
+                                val resText = Divide(reff[0]).div12()
+                                time_txt.text = resText[0]
+                                time_txt.textSize = 84F
+                                date_txt.text = resText[1]
+                            } catch (e: Exception) {
+                                time_txt.text = "予約がありません"
+                                time_txt.textSize = 40F
+                                date_txt.text = ""
                             }
-                            reff.sort()
-                            val resText = Divide(reff[0]).div12()
-                            date_txt.text = resText
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -73,11 +83,30 @@ class MainActivity : AppCompatActivity() {
         btn_entry.setOnClickListener {
             val sp = getSharedPreferences("ES", MODE_PRIVATE)
             val flag = sp.getInt("SWITCH", -1)
-            var intent = Intent(this, Reader::class.java)
             if (flag != -1) {
-                intent = Intent(this, LockUnlock::class.java)
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("エラー")
+                        .setMessage("既に入室中です。")
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                builder.show()
+            } else {
+                val intent = Intent(this, Reader::class.java)
+                startActivity(intent)
             }
-            startActivity(intent)
+        }
+        btn_lock.setOnClickListener {
+            val sp = getSharedPreferences("ES", MODE_PRIVATE)
+            val flag = sp.getInt("SWITCH", -1)
+            if (flag == -1) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("エラー")
+                        .setMessage("部屋に入室していません。\nロックボタンは、入室の処理が完了すると使用可能になります。")
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                builder.show()
+            } else {
+                val intent = Intent(this, LockUnlock::class.java)
+                startActivity(intent)
+            }
         }
     }
 
