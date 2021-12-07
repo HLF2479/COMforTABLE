@@ -13,7 +13,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/release_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:textSize="23dp" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,8 +38,8 @@
                     android:id="@+id/release_submit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="ok"
-                    android:textSize="24dp"/>
+                    android:text="@string/ok"
+                    android:textSize="24dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

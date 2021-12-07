@@ -22,7 +22,7 @@
                 android:id="@+id/check1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="　扉のロックを掛けましたか？"/>
+                android:text="@string/check1" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +31,8 @@
             <CheckBox
                 android:id="@+id/check2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:text="@string/check2" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +41,8 @@
             <CheckBox
                 android:id="@+id/check3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:text="@string/check3" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +51,8 @@
             <CheckBox
                 android:id="@+id/check4"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:text="@string/check4" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,7 +67,7 @@
                     android:id="@+id/check_back"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="ボタンに戻る"/>
+                    android:text="@string/check_back" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,7 +77,7 @@
                     android:id="@+id/check_submit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="完了" />
+                    android:text="@string/complete" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

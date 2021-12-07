@@ -87,12 +87,15 @@ class Reader : AppCompatActivity() {
     private fun openQRCamera() {
         qr_view.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
+                val resA = result.toString().toInt() / 10000 * 4
+                val resB = result.toString().toInt() % 10000 * 3
+                val sum = resB - resA
                 if (result != null && flag) {
                     onPause()
                     flag = false
                     Log.d("QRCode", "$result")
                     val intent = Intent(applicationContext, Attention::class.java)
-                    intent.putExtra("ROOM", result.toString().toInt())
+                    intent.putExtra("ROOM", sum)
                     startActivity(intent)
                     finish()
                 }

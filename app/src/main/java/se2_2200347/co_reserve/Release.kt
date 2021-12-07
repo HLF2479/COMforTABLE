@@ -16,6 +16,9 @@ class Release : AppCompatActivity() {
         val ro_number = intent.getIntExtra("ROOM", -1)
         ed.putInt("SWITCH", ro_number).apply()
 
+        val text = "ROOM${ro_number}のロックを解除しました。\n終了時間にご注意ください。"
+        release_tv.text = text
+
         release_submit.setOnClickListener {
             val intent = Intent(this, LockUnlock::class.java)
             startActivity(intent)

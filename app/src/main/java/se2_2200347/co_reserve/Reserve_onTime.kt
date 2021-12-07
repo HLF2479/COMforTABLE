@@ -1,16 +1,22 @@
 package se2_2200347.co_reserve
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_reserve_on_time.*
 
 private val daies = listOf<String>("", "日", "月", "火", "水", "木", "金", "土")
+private val database = FirebaseDatabase.getInstance()
+private val userRef = database.getReference("users")
 
 //１～７番部屋の予約時間仮データ(s:開始時間、e:終了時間)
 private val list1_s = arrayListOf<String>("10:00", "13:30", "16:00", "18:00", )
@@ -45,6 +51,9 @@ class Reserve_onTime : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_on_time)
 
+        for (i in lists.indices) {
+            lists[i].clear()
+        }
         for (i in 0 until lists.size) {
             for (k in 0 until lists_s[i].size) {
                 lists[i].add(lists_s[i][k] + " ~ " + lists_e[i][k])
@@ -52,6 +61,18 @@ class Reserve_onTime : AppCompatActivity() {
         }
 
         setList("0")
+
+        val id = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
+        var count = 0
+        userRef.child("$id").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                count = snapshot.child("counter").value.toString().toInt()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(baseContext, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         val year = intent.getStringExtra("YEAR")
         val f_year = year?.substring(2,4)   //年は下２文字だけ表示させる
@@ -70,17 +91,27 @@ class Reserve_onTime : AppCompatActivity() {
         }
 
         re_btn_confirmation.setOnClickListener {
-            val start_hour = re_start_hour.selectedItem.toString()
-            val start_minute = re_start_min.selectedItem.toString()
-            val end_hour = re_end_hour.selectedItem.toString()
-            val end_minunte = re_end_min.selectedItem.toString()
-            val room_num = re_spi_room.selectedItemPosition + 1
+            val startHour = re_start_hour.selectedItem.toString()
+            val startMinute = re_start_min.selectedItem.toString()
+            val endHour = re_end_hour.selectedItem.toString()
+            val endMinute = re_end_min.selectedItem.toString()
+            val roomNumber = re_spi_room.selectedItemPosition + 1
+
+            val resDate = year + month?.let { it1 -> Divide(-1).format02(it1.toLong()) } + date?.let { it2 -> Divide(-1).format02(it2.toLong()) }
+            val startTime = startHour + startMinute
+            val endTime = endHour + endMinute
+
+            if (count < 3 && id != null) {
+                FirebaseReserve().reg(startTime.toInt(), endTime.toInt(), resDate, roomNumber.toString(), id)
+                userRef.child("$id").child("counter").setValue("${count + 1}")
+            }
+
             val intent = Intent(this, Reserve_confirmation::class.java)
-            intent.putExtra("START_H", start_hour)
-            intent.putExtra("START_M", start_minute)
-            intent.putExtra("END_H", end_hour)
-            intent.putExtra("END_M", end_minunte)
-            intent.putExtra("ROOM_N", room_num)
+            intent.putExtra("START_H", startHour)
+            intent.putExtra("START_M", startMinute)
+            intent.putExtra("END_H", endHour)
+            intent.putExtra("END_M", endMinute)
+            intent.putExtra("ROOM_N", roomNumber)
             startActivity(intent)
         }
     }
@@ -89,6 +120,6 @@ class Reserve_onTime : AppCompatActivity() {
         val num = idx.toInt()
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lists[num])
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_1)
-        re_list_reseved.adapter = adapter
+        re_list_reserved.adapter = adapter
     }
 }

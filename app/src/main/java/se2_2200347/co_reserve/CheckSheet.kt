@@ -22,12 +22,12 @@ class CheckSheet : AppCompatActivity() {
         val roomNumber = intent.getIntExtra("ROOM", -1)
         val lockRef = database.getReference("lock/$roomNumber")
 
-        check1.setOnClickListener {
+        check2.setOnClickListener {
             lockRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val locked = snapshot.value.toString().toInt()
                     if (locked == 0) {
-                        check1.isChecked = false
+                        check2.isChecked = false
                         Toast.makeText(baseContext, "扉がロックされていません。", Toast.LENGTH_SHORT).show()
                     }
                 }

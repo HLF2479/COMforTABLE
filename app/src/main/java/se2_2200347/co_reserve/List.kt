@@ -10,9 +10,10 @@ import kotlinx.android.synthetic.main.activity_list.*
 
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.item_reserve.view.*
 
 private val database = FirebaseDatabase.getInstance()
-private val bookref = database.getReference("booking")
+private val bookRef = database.getReference("booking")
 
 class List : AppCompatActivity() {
 
@@ -23,9 +24,10 @@ class List : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
+        val count = intent.getIntExtra("COUNT", 0)
         val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
         val number = sp.getString("NUM", "")
-        bookref.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
+        bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 //ref内の値を抜き取ってリストに表示
                 array.clear()
@@ -45,8 +47,8 @@ class List : AppCompatActivity() {
                 for (element in array) {
                     result.add(Divide(element).div17())
                 }
-//                    val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, result)
-                val adapter = ListAdapter(this@List, result, array)
+//                val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, result)
+                val adapter = number?.let { ListAdapter(this@List, result, array, it, count) }
                 ListView.adapter = adapter
             }
 
