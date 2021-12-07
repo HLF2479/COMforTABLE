@@ -36,13 +36,13 @@ class FirebaseReserve {
      * データクラスreserveで設定したデータをbookingテーブル配下に挿入するメソッド
      * 子要素 a の配下に生成した一意のkey名をvalueに取得する
      */
-    private fun makecheck(res : reserve){
+    fun makecheck(res : reserve){
         testbase.child("booking").push().setValue(res)
     }
 
 
     //ページを表示時にデータベースの監視を開始するメソッド
-    private fun download() {
+    fun download() {
         val postListener = object : ValueEventListener {
 
             //データが更新されるたびに細かく呼び出されるところ？
@@ -65,12 +65,12 @@ class FirebaseReserve {
     }
 
     //データベースの監視を終了するメソッド
-    private fun watchend(){
+    fun watchend(){
         testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
     }
 
     //新規予約を登録するために用いるメソッド
-    private fun reg(st : Int , ed : Int , date : String , room : String , ID : String){
+    fun reg(st : Int , ed : Int , date : String , room : String , ID : String){
         //st : 新規開始時間   ed : 新規終了時間     rst : 既存開始時間    red : 既存終了時間
         var rst = 0
         var red = 0
@@ -114,7 +114,7 @@ class FirebaseReserve {
     }
 
     //予約の変更を行うために行うメソッド
-    private fun reg(st : Int , ed : Int , date : String , room : String , ID : String , olddate : String? , oldroom : String?){
+    fun reg(st : Int , ed : Int , date : String , room : String , ID : String , olddate : String? , oldroom : String?){
         //st : 新規開始時間   ed : 新規終了時間     rst : 既存開始時間    red : 既存終了時間
         //初回宣言時は変更する予定の予約を入力する
         var rst = 0
@@ -172,5 +172,22 @@ class FirebaseReserve {
 
     }
 
+    fun delete(st : Int , date : String , room : String , ID : String){
+        //削除するデータのキー値を格納する変数
+        var key = ""
+        //キーを取得するために要素が合致するものを検索する
+        for(i in snaped.children){
+            if(i.child("book_start").value.toString().toInt() == st
+                    && i.child("room").value.toString() == room
+                    && i.child("ID").value.toString() == ID
+                    && i.child("date").value.toString() == date){
+
+                key = i.key.toString()
+            }
+        }
+        testbase.child("booking").child(key).removeValue()
+
+
+    }
 
 }
