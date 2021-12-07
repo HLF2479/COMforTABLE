@@ -7,12 +7,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlin.concurrent.fixedRateTimer
+import kotlin.coroutines.coroutineContext
 
 //firebaseの接続用のリファランスの宣言
 private val testbase = FirebaseDatabase.getInstance().getReference()
 
 //スナップショットをいろいろなところで用いるために事前に宣言
 private lateinit var snaped : DataSnapshot
+private lateinit var postListener : ValueEventListener
 
 class FirebaseReserve {
 
@@ -38,44 +41,14 @@ class FirebaseReserve {
     }
 
 
-    //データが更新されるたびに起動するメソッド系列（更新）
-    private fun downloaded(date : String , room : String ) {
-        //ここの部分でデータの取得を行っている
-
-        //既存の予約の開始時間と終了時間を入れておくための変数を宣言
-        var stkey = ""
-        var edkey = ""
-
-        //予約変更する前の開始時間と終了時間をいったんこちらで宣言
-        var oldst = "".toString().toInt()
-        var olded = "".toString().toInt()
-
+    //ページを表示時にデータベースの監視を開始するメソッド
+    private fun download() {
         val postListener = object : ValueEventListener {
 
             //データが更新されるたびに細かく呼び出されるところ？
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                // val post = dataSnapshot.child("username").getValue()
                 //データが更新されるたびにスナップショットを更新保存する
                 snaped = dataSnapshot
-
-                var n = 0
-                var rst = 0
-                var red = 0
-                for (e in snaped.children) {
-                    if (n % 2 == 0) {
-                        rst = e.value.toString().toInt()
-                        stkey = e.key.toString()
-                    } else {
-                        red = e.value.toString().toInt()
-                        edkey = e.key.toString()
-                    }
-                    if (rst == oldst && red == olded && n % 2 == 1) {
-                        break
-                    }
-                    n++
-                }
-
             }
 
             //データ更新されたときのリスナーがエラー吐いた場合に行われる処理
@@ -84,6 +57,120 @@ class FirebaseReserve {
                 Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
+
+        //常時監視する領域の指定（Rootに近くなるほど頻繁に更新されるので重くなる)
+        //似たような箇所を複数監視されると重たいので、リセットしてから宣言のし直し
+        testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
+        testbase.child("booking").orderByChild("book_start").addValueEventListener(postListener)
     }
+
+    //データベースの監視を終了するメソッド
+    private fun watchend(){
+        testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
+    }
+
+    //新規予約を登録するために用いるメソッド
+    private fun reg(st : Int , ed : Int , date : String , room : String , ID : String){
+        //st : 新規開始時間   ed : 新規終了時間     rst : 既存開始時間    red : 既存終了時間
+        var rst = 0
+        var red = 0
+        //データ追加可能かどうかの判定を行うフラグ
+        var tag = true
+        val stl = arrayListOf<Int>()
+        val edl = arrayListOf<Int>()
+        val datel = arrayListOf<String>()
+        val rooml = arrayListOf<String>()
+
+        //めんどくさくなったので配列にぶち込みました
+        for(i in snaped.children){
+            //日時、開始終了が一致する場合、配列に登録しない
+            if(i.child("book_start").value.toString() != rst.toString()
+                    &&  i.child("book_end").value.toString() != red.toString()) {
+                stl.add(i.child("book_start").value.toString().toInt())
+                edl.add(i.child("book_end").value.toString().toInt())
+                datel.add(i.child("date").value.toString())
+                rooml.add(i.child("room").value.toString())
+            }
+        }
+
+        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
+
+        //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
+        for (i in 0 .. stl.size - 1) {
+            //部屋番号と日付の日付が同じ予約のみを判定する
+
+            if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
+                    stl[i] < ed && ed < edl[i] || //既存の予約終了時間が予約希望時間の間にある場合
+                    st <= stl[i] && edl[i] <= ed) {  //既存の予約時間の間に予約希望時間が含まれている場合
+                tag = false
+                break
+            }
+
+        }
+//予約にかぶりが発生しなかった場合に登録処理を行う
+        if (tag){makecheck(regs)}
+
+
+    }
+
+    //予約の変更を行うために行うメソッド
+    private fun reg(st : Int , ed : Int , date : String , room : String , ID : String , olddate : String? , oldroom : String?){
+        //st : 新規開始時間   ed : 新規終了時間     rst : 既存開始時間    red : 既存終了時間
+        //初回宣言時は変更する予定の予約を入力する
+        var rst = 0
+        var red = 0
+        //データ追加可能かどうかの判定を行うフラグ
+        var tag = true
+        val stl = arrayListOf<Int>(0)
+        val edl = arrayListOf<Int>(0)
+        val datel = arrayListOf<String>("")
+        val rooml = arrayListOf<String>("")
+        var key = ""
+
+        //めんどくさくなったので配列にぶち込みました
+        for(i in snaped.children){
+            //日時、開始終了が一致する場合、配列に登録しない
+            if(i.child("book_start").value.toString() != rst.toString()
+                    &&  i.child("book_end").value.toString() != red.toString()
+                    && i.child("date").value.toString() != olddate
+                    && i.child("room").value.toString() != oldroom) {
+                stl.add(i.child("book_start").value.toString().toInt())
+                edl.add(i.child("book_end").value.toString().toInt())
+                datel.add(i.child("date").value.toString())
+                rooml.add(i.child("room").value.toString())
+            }else{
+                //全ての日時を配列に登録する
+                stl[0] = i.child("book_start").value.toString().toInt()
+                edl[0] = i.child("book_end").value.toString().toInt()
+                datel[0] = i.child("date").value.toString()
+                rooml[0] = i.child("room").value.toString()
+                key = i.child("room").key.toString()
+            }
+        }
+
+        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
+
+        //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
+        for (i in 0 .. stl.size - 1) {
+            //部屋番号と日付の日付が同じ予約のみを判定する
+
+            if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
+                    stl[i] < ed && ed < edl[i] || //既存の予約終了時間が予約希望時間の間にある場合
+                    st <= stl[i] && edl[i] <= ed) {  //既存の予約時間の間に予約希望時間が含まれている場合
+                tag = false
+                break
+            }
+
+        }
+//予約にかぶりが発生しなかった場合に登録処理を行う
+        if (tag){
+            makecheck(regs)
+            //変更前の予約を削除する
+            testbase.child("booking").child(key).removeValue()
+
+        }
+
+    }
+
 
 }
