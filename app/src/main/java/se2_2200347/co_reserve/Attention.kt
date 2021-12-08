@@ -11,8 +11,8 @@ class Attention : AppCompatActivity() {
         setContentView(R.layout.activity_attention)
 
         val ro_number = intent.getIntExtra("ROOM", -1)
-        val text = "" + ro_number + "番の部屋を認識しました。"
-        attention_txt.setText(text)
+//        val text = "" + ro_number + "番の部屋を認識しました。"
+//        attention_txt.setText(text)
         attention_submit.setOnClickListener {
             val intent = Intent(this, Release::class.java)
             intent.putExtra("ROOM", ro_number)

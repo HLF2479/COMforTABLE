@@ -2,16 +2,14 @@ package se2_2200347.co_reserve
 
 import android.content.ContentValues
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlin.concurrent.fixedRateTimer
-import kotlin.coroutines.coroutineContext
 
 //firebaseの接続用のリファランスの宣言
 private val testbase = FirebaseDatabase.getInstance().getReference()
+private val bookRef = FirebaseDatabase.getInstance().getReference("booking")
 
 //スナップショットをいろいろなところで用いるために事前に宣言
 private lateinit var snaped : DataSnapshot
@@ -38,6 +36,9 @@ class FirebaseReserve {
      */
     fun makecheck(res : reserve){
         testbase.child("booking").push().setValue(res)
+    }
+    fun makeCheck(data: Map<String, String>) {
+        bookRef.push().setValue(data)
     }
 
 
@@ -76,40 +77,56 @@ class FirebaseReserve {
         var red = 0
         //データ追加可能かどうかの判定を行うフラグ
         var tag = true
-        val stl = arrayListOf<Int>()
-        val edl = arrayListOf<Int>()
-        val datel = arrayListOf<String>()
-        val rooml = arrayListOf<String>()
+        var stl = arrayListOf<Int>()
+        var edl = arrayListOf<Int>()
+        var datel = arrayListOf<String>()
+        var rooml = arrayListOf<String>()
 
-        //めんどくさくなったので配列にぶち込みました
-        for(i in snaped.children){
-            //日時、開始終了が一致する場合、配列に登録しない
-            if(i.child("book_start").value.toString() != rst.toString()
-                    &&  i.child("book_end").value.toString() != red.toString()) {
-                stl.add(i.child("book_start").value.toString().toInt())
-                edl.add(i.child("book_end").value.toString().toInt())
-                datel.add(i.child("date").value.toString())
-                rooml.add(i.child("room").value.toString())
-            }
-        }
+        bookRef.orderByChild("book_start").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //めんどくさくなったので配列にぶち込みました
+                for(i in snapshot.children){
+                    //日時、開始終了が一致する場合、配列に登録しない
+                    if(i.child("date").value.toString() == date
+                            && i.child("book_start").value.toString() != rst.toString()
+                            && i.child("book_end").value.toString() != red.toString()) {
+                        stl.add(i.child("book_start").value.toString().toInt())
+                        edl.add(i.child("book_end").value.toString().toInt())
+                        datel.add(i.child("date").value.toString())
+                        rooml.add(i.child("room").value.toString())
+                    }
+                }
 
-        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
+//                val regs = reserve(date , st.toString() , ed.toString() , room , ID)
+                val regs = mapOf<String, String>(
+                        "date" to date,
+                        "book_start" to st.toString(),
+                        "book_end" to ed.toString(),
+                        "room" to room,
+                        "user_id" to ID
+                )
 
-        //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
-        for (i in 0 .. stl.size - 1) {
-            //部屋番号と日付の日付が同じ予約のみを判定する
+                //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
+                for (i in stl.indices) {
+                    //部屋番号と日付の日付が同じ予約のみを判定する
 
-            if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
-                    stl[i] < ed && ed < edl[i] || //既存の予約終了時間が予約希望時間の間にある場合
-                    st <= stl[i] && edl[i] <= ed) {  //既存の予約時間の間に予約希望時間が含まれている場合
-                tag = false
-                break
-            }
+                    if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
+                            stl[i] < ed && ed < edl[i] || //既存の予約終了時間が予約希望時間の間にある場合
+                            st <= stl[i] && edl[i] <= ed) {  //既存の予約時間の間に予約希望時間が含まれている場合
+                        tag = false
+                        break
+                    }
 
-        }
+                }
 //予約にかぶりが発生しなかった場合に登録処理を行う
-        if (tag){makecheck(regs)}
+                if (tag){makeCheck(regs)}
+                Log.d("FLAG", tag.toString())
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ERROR", "error")
+            }
+        })
 
     }
 
@@ -189,5 +206,4 @@ class FirebaseReserve {
 
 
     }
-
 }

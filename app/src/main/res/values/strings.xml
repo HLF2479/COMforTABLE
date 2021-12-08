@@ -11,6 +11,15 @@
     <string name="home_entry">入室</string>
     <string name="home_lock">ロック</string>
     <string name="reserve_1">日付を選んでください</string>
+    <string name="attention">・扉は終了時間の５分後に自動でロックされます。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。</string>
+    <string name="ok">ok</string>
+    <string name="check1">　室内の電源を全てOFFにしましたか？</string>
+    <string name="check2">　扉のロックを掛けましたか？</string>
+    <string name="check3">　外の張り紙を外しましたか？</string>
+    <string name="check4">　PC、マウス等は除菌しましたか？</string>
+    <string name="check_back">ボタンに戻る</string>
+    <string name="quit">退出が完了しました。\n部屋を綺麗にご利用いただき、\nありがとうございます。</string>
+    <string name="complete">完了</string>
 
     <string name="time_reserve_s">開始予定時刻：</string>
     <string name="time_reserve_e">終了予定時刻：</string>

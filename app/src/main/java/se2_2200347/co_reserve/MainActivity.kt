@@ -27,14 +27,16 @@ class MainActivity : AppCompatActivity() {
 
         val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
         val number = sp.getString("NUM", "")
+        var count = 0
 
         if (number == "") {
-            TitleToOneWay()
+            TitleOneway()
         } else {
             st_num.text = number
-            userRef.child("$number/name").addValueEventListener(object: ValueEventListener {
+            userRef.child("$number").addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    st_name.text = snapshot.value.toString()
+                    st_name.text = snapshot.child("name").value.toString()
+                    count = snapshot.child("counter").value.toString().toInt()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -78,11 +80,12 @@ class MainActivity : AppCompatActivity() {
         }
         btn_list.setOnClickListener {
             val intent = Intent(this, List::class.java)
+            intent.putExtra("COUNT", count)
             startActivity(intent)
         }
         btn_entry.setOnClickListener {
-            val sp = getSharedPreferences("ES", MODE_PRIVATE)
-            val flag = sp.getInt("SWITCH", -1)
+            val es = getSharedPreferences("ES", MODE_PRIVATE)
+            val flag = es.getInt("SWITCH", -1)
             if (flag != -1) {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("エラー")
@@ -95,8 +98,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btn_lock.setOnClickListener {
-            val sp = getSharedPreferences("ES", MODE_PRIVATE)
-            val flag = sp.getInt("SWITCH", -1)
+            val es = getSharedPreferences("ES", MODE_PRIVATE)
+            val flag = es.getInt("SWITCH", -1)
             if (flag == -1) {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("エラー")
@@ -125,14 +128,14 @@ class MainActivity : AppCompatActivity() {
                 val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
                 val editor = sp.edit()
                 editor.clear().apply()
-                TitleToOneWay()
+                TitleOneway()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun TitleToOneWay() {
+    private fun TitleOneway() {
         val intent = Intent(this, Title::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)

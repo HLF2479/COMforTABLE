@@ -33,7 +33,7 @@ class Divide(l : Long) {
 
         return "${year}年${month}月${day}日\n${firstHour}時${firstMin}分～${endHour}時${endMin}分\n${room}番部屋"
     }
-    private fun format02(l: Long) : String {
+    fun format02(l: Long) : String {
         return "%02d".format(l)
     }
 }

@@ -23,7 +23,7 @@ class Reserve : AppCompatActivity() {
         calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, 13)
 
-        // 未来の選択可能日を１ヶ月後に変更
+        // 未来の選択可能日を２週間後に変更
         cal_reserve.maxDate = calendar.timeInMillis
 
         cal_reserve.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -39,7 +39,7 @@ class Reserve : AppCompatActivity() {
             } else {
                 var intent = Intent(this, Reserve_onTime::class.java)
                 intent.putExtra("YEAR", year.toString())
-                intent.putExtra("MONTH", month.toString())
+                intent.putExtra("MONTH", (month + 1).toString())
                 intent.putExtra("DATE", dayOfMonth.toString())
                 intent.putExtra("DAY", day)
                 startActivity(intent)
