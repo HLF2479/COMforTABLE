@@ -51,7 +51,7 @@ class FirebaseReserve {
 
     //ページを表示時にデータベースの監視を開始するメソッド
     fun download() {
-        val postListener = object : ValueEventListener {
+        postListener = object : ValueEventListener {
 
             //データが更新されるたびに細かく呼び出されるところ？
             override fun onDataChange(dataSnapshot: DataSnapshot) {
