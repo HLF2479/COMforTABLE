@@ -1,9 +1,8 @@
 package se2_2200347.co_reserve
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.activity_list.*
@@ -17,17 +16,18 @@ private val bookRef = database.getReference("booking")
 
 class List : AppCompatActivity() {
 
+    //ListViewに表示する予約情報を格納する変数
     private var array = arrayListOf<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
         val count = intent.getIntExtra("COUNT", 0)
-        val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
-        val number = sp.getString("NUM", "")
-        bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
+        val number = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
+        val myBook = bookRef.orderByChild("user_id").equalTo("$number")
+
+        myBook.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 //ref内の値を抜き取ってリストに表示
                 array.clear()
@@ -52,8 +52,8 @@ class List : AppCompatActivity() {
                 ListView.adapter = adapter
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(baseContext, "読み込み失敗", Toast.LENGTH_SHORT).show()
+            override fun onCancelled(e: DatabaseError) {
+                Log.e("ERROR", e.toString())
             }
         })
     }

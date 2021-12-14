@@ -14,28 +14,31 @@ import kotlinx.android.synthetic.main.activity_check_sheet.*
 class CheckSheet : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance()
+    private lateinit var snaped : DataSnapshot
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_sheet)
 
         val roomNumber = intent.getIntExtra("ROOM", -1)
-        val lockRef = database.getReference("lock/$roomNumber")
+        val lockRef = database.getReference("lock/$roomNumber/lock")
+
+        lockRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snaped = snapshot
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(baseContext, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         check2.setOnClickListener {
-            lockRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val locked = snapshot.value.toString().toInt()
-                    if (locked == 0) {
-                        check2.isChecked = false
-                        Toast.makeText(baseContext, "扉がロックされていません。", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(baseContext, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
-                }
-            })
+            val locked = snaped.value.toString().toInt()
+            if (locked != 1) {
+                check2.isChecked = false
+                Toast.makeText(baseContext, "扉がロックされていません。", Toast.LENGTH_SHORT).show()
+            }
         }
 
         check_back.setOnClickListener {

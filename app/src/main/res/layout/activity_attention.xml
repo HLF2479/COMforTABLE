@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center|start"
-                android:text="@string/attention"
+                android:text="@string/attention_wait"
                 android:textSize="23dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
                     android:id="@+id/attention_submit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="次へ" />
+                    android:text="@string/back" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

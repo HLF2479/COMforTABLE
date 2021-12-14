@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private val userRef = database.getReference("users")
     private val bookRef = database.getReference("booking")
 
+    private val mySnap = MySnap.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,9 +34,10 @@ class MainActivity : AppCompatActivity() {
         if (number == "") {
             TitleOneway()
         } else {
-            st_num.text = number
             userRef.child("$number").addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    mySnap.userSnapshot = snapshot
+                    st_num.text = number
                     st_name.text = snapshot.child("name").value.toString()
                     count = snapshot.child("counter").value.toString().toInt()
                 }
@@ -44,39 +47,48 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            bookRef.orderByChild("user_id").equalTo("$number")
-                    .addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            var reff = arrayListOf<Long>()
-                            try {
-                                for (i in snapshot.children) {
-                                    val date = i.child("date").value.toString().toLong()
-                                    var convD = date * 10000
-                                    val time = i.child("book_start").value.toString().toLong()
-                                    convD += time
-                                    reff.add(convD)
-                                }
-                                reff.sort()
-                                val resText = Divide(reff[0]).div12()
-                                time_txt.text = resText[0]
-                                time_txt.textSize = 84F
-                                date_txt.text = resText[1]
-                            } catch (e: Exception) {
-                                time_txt.text = "予約がありません"
-                                time_txt.textSize = 40F
-                                date_txt.text = ""
-                            }
+            bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    mySnap.myBooking = snapshot
+                    var reff = arrayListOf<Long>()
+                    try {
+                        for (i in snapshot.children) {
+                            val date = i.child("date").value.toString().toLong()
+                            var convD = date * 10000
+                            val time = i.child("book_start").value.toString().toLong()
+                            convD += time
+                            reff.add(convD)
                         }
+                        reff.sort()
+                        val resText = Divide(reff[0]).div12()
+                        time_txt.text = resText[0]
+                        time_txt.textSize = 84F
+                        date_txt.text = resText[1]
+                    } catch (e: Exception) {
+                        time_txt.text = "予約がありません"
+                        time_txt.textSize = 40F
+                        date_txt.text = ""
+                    }
+                }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(baseContext, "予約日の読み込みに失敗しました", Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(baseContext, "予約日の読み込みに失敗しました", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
         btn_reserve.setOnClickListener {
-            val intent = Intent(this, Reserve::class.java)
-            startActivity(intent)
+            if (count >= 3) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("予約数オーバー")
+                builder.setMessage("予約数が３件に到達しています。\nこれ以上は予約できません。")
+                builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->  })
+                builder.show()
+            } else {
+                val intent = Intent(this, Reserve::class.java)
+                intent.putExtra("COUNT", count)
+                startActivity(intent)
+            }
         }
         btn_list.setOnClickListener {
             val intent = Intent(this, List::class.java)
@@ -135,6 +147,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * タイトル画面に遷移させる。同時に裏のアクティビティを全て閉じる
+     * param intent Intent
+     */
     private fun TitleOneway() {
         val intent = Intent(this, Title::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

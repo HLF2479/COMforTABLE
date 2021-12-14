@@ -14,8 +14,8 @@ class LockUnlock : AppCompatActivity() {
 
     private var c = 0
     private val handler = Handler()
-    private val flags = arrayOf(true, false)
-    val btn_lock = object : Runnable {
+    private val flags = listOf(true, false)
+    private val btnLock = object : Runnable {
         override fun run() {
             c = 1 - c
             unlock_btn.isEnabled = flags[c]
@@ -31,22 +31,22 @@ class LockUnlock : AppCompatActivity() {
         setContentView(R.layout.activity_lock_unlock)
 
         val sp = getSharedPreferences("ES", MODE_PRIVATE)
-        val ro_number = sp.getInt("SWITCH", -1)
-        val lockRef = database.getReference("lock").child(ro_number.toString())
+        val roomNumber = sp.getInt("SWITCH", -1)
+        val lockRef = database.getReference("lock/$roomNumber/lock")
 
         unlock_btn.setOnClickListener {
             Toast.makeText(this, "ロックを解除しました。", Toast.LENGTH_SHORT).show()
-            handler.post(btn_lock)
+            handler.post(btnLock)
             lockRef.setValue("0")
         }
         lock_btn.setOnClickListener {
             Toast.makeText(this, "扉をロックしました。", Toast.LENGTH_SHORT).show()
-            handler.post(btn_lock)
+            handler.post(btnLock)
             lockRef.setValue("1")
         }
         quit_btn.setOnClickListener {
             val intent = Intent(this, CheckSheet::class.java)
-            intent.putExtra("ROOM", ro_number)
+            intent.putExtra("ROOM", roomNumber)
             startActivity(intent)
         }
 

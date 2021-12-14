@@ -11,7 +11,11 @@
     <string name="home_entry">入室</string>
     <string name="home_lock">ロック</string>
     <string name="reserve_1">日付を選んでください</string>
-    <string name="attention">・扉は終了時間の５分後に自動でロックされます。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。</string>
+    <string name="attention_wait">しばらくお待ちください…</string>
+    <string name="attention_ok">・扉は終了時間の５分後に自動でロックされます。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。\n・もし何か不都合がありましたら、進路指導課までご連絡ください。</string>
+    <string name="attention_error">予約時間か部屋が違います。\n予約一覧から予約情報を再確認してください。</string>
+    <string name="next">次へ</string>
+    <string name="back">戻る</string>
     <string name="ok">ok</string>
     <string name="check1">　室内の電源を全てOFFにしましたか？</string>
     <string name="check2">　扉のロックを掛けましたか？</string>

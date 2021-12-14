@@ -23,15 +23,25 @@
                 android:textSize="28dp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/rot_date_calendar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_weight="1.6">
             <TextView
-                android:id="@+id/re_date"
+                android:id="@+id/rot_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/rot_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="日付を変更する"
+                android:textSize="16dp"
+                android:layout_weight="1" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal" />
             <LinearLayout
                 android:id="@+id/re_start_time"
                 android:layout_width="match_parent"
