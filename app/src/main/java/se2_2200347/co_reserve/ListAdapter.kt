@@ -43,7 +43,7 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
             //positionから年月日情報を取り出し、曜日を加えて予約アクティビティに遷移する
             val year = date / 10000         //年
             val month = date / 100 % 100    //月
-            val dayOfMonth = date % 100     //日にち
+            val dayOfMonth = date % 100     //日
             var dayOfWeek : Int             //曜日(数値)
 
             val localDate = LocalDate.parse("$year-$month-$dayOfMonth")

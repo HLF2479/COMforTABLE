@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -20,8 +21,10 @@ class MainActivity : AppCompatActivity() {
     private val database = FirebaseDatabase.getInstance()
     private val userRef = database.getReference("users")
     private val bookRef = database.getReference("booking")
+    private val lockRef = database.getReference("lock")
 
     private val mySnap = MySnap.getInstance()
+    private val firebase = FirebaseReserve()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +34,26 @@ class MainActivity : AppCompatActivity() {
         val number = sp.getString("NUM", "")
         var count = 0
 
+        var flag = false
         if (number == "") {
             TitleOneway()
         } else {
             userRef.child("$number").addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     mySnap.userSnapshot = snapshot
-                    st_num.text = number
-                    st_name.text = snapshot.child("name").value.toString()
-                    count = snapshot.child("counter").value.toString().toInt()
+                    val key = snapshot.child("key").value.toString()
+                    val myKey = sp.getString("KEY", "")
+                    if (key == myKey) {
+                        st_num.text = number
+                        st_name.text = snapshot.child("name").value.toString()
+                        count = snapshot.child("counter").value.toString().toInt()
+                        flag = true
+                    } else {
+                        Toast.makeText(baseContext, "他の端末からログインがありました。", Toast.LENGTH_SHORT).show()
+                        val editor = sp.edit()
+                        editor.clear().apply()
+                        TitleOneway()
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -49,31 +63,38 @@ class MainActivity : AppCompatActivity() {
 
             bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    mySnap.myBooking = snapshot
-                    var reff = arrayListOf<Long>()
-                    try {
-                        for (i in snapshot.children) {
-                            val date = i.child("date").value.toString().toLong()
-                            var convD = date * 10000
-                            val time = i.child("book_start").value.toString().toLong()
-                            convD += time
-                            reff.add(convD)
+                    if (flag) {
+                        mySnap.myBooking = snapshot
+                        var reff = arrayListOf<Long>()
+                        try {
+                            for (i in snapshot.children) {
+                                val date = i.child("date").value.toString().toLong()
+                                var convD = date * 10000
+                                val time = i.child("book_start").value.toString().toLong()
+                                convD += time
+                                reff.add(convD)
+                            }
+                            reff.sort()
+                            val resText = Divide(reff[0]).div12()
+                            time_txt.text = resText[0]
+                            time_txt.textSize = 84F
+                            date_txt.text = resText[1]
+                        } catch (e: Exception) {
+                            time_txt.text = "予約がありません"
+                            time_txt.textSize = 40F
+                            date_txt.text = ""
                         }
-                        reff.sort()
-                        val resText = Divide(reff[0]).div12()
-                        time_txt.text = resText[0]
-                        time_txt.textSize = 84F
-                        date_txt.text = resText[1]
-                    } catch (e: Exception) {
-                        time_txt.text = "予約がありません"
-                        time_txt.textSize = 40F
-                        date_txt.text = ""
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(baseContext, "予約日の読み込みに失敗しました", Toast.LENGTH_SHORT).show()
                 }
+            })
+
+            lockRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) { mySnap.lockSnapshot = snapshot }
+                override fun onCancelled(error: DatabaseError) { Log.e("ERROR", error.toString()) }
             })
         }
 
@@ -86,7 +107,6 @@ class MainActivity : AppCompatActivity() {
                 builder.show()
             } else {
                 val intent = Intent(this, Reserve::class.java)
-                intent.putExtra("COUNT", count)
                 startActivity(intent)
             }
         }
@@ -111,16 +131,28 @@ class MainActivity : AppCompatActivity() {
         }
         btn_lock.setOnClickListener {
             val es = getSharedPreferences("ES", MODE_PRIVATE)
-            val flag = es.getInt("SWITCH", -1)
-            if (flag == -1) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("エラー")
-                        .setMessage("部屋に入室していません。\nロックボタンは、入室の処理が完了すると使用可能になります。")
-                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
-                builder.show()
-            } else {
-                val intent = Intent(this, LockUnlock::class.java)
-                startActivity(intent)
+            val switch = es.getInt("SWITCH", -1)
+            val endKey = es.getInt("END", -1)
+            when {
+                switch == -1 -> {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("エラー")
+                            .setMessage("部屋に入室していません。\nロックボタンは、入室の処理が完了すると使用可能になります。")
+                            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                    builder.show()
+                }
+                !firebase.getEnabled(switch, endKey) -> {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("エラー")
+                            .setMessage("部屋の利用時間外です。")
+                            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                    builder.show()
+                    es.edit().putInt("SWITCH", -1).apply()
+                }
+                else -> {
+                    val intent = Intent(this, LockUnlock::class.java)
+                    startActivity(intent)
+                }
             }
         }
     }

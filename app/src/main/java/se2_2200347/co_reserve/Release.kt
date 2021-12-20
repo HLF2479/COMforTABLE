@@ -17,13 +17,15 @@ class Release : AppCompatActivity() {
         val sp = getSharedPreferences("ES", MODE_PRIVATE)
         val ed = sp.edit()
 
-        //部屋番号を内部ストレージに保存
         val roomNumber = intent.getIntExtra("ROOM", -1)
-        ed.putInt("SWITCH", roomNumber).apply()
-
         //予約終了時間をfirebaseにアップする(ESP側で判定する用)
         val bookEnd = intent.getIntExtra("END", -9)
         lockRef.child("$roomNumber/end").setValue("$bookEnd")
+
+        //部屋番号、終了時間を内部ストレージに保存
+        ed.putInt("SWITCH", roomNumber)
+        ed.putInt("END", bookEnd)
+        ed.apply()
 
         val text = "ROOM${roomNumber}のロックを解除しました。\n終了時間にご注意ください。"
         lockRef.child("$roomNumber/lock").setValue("0")

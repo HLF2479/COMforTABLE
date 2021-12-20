@@ -5,40 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_check_sheet.*
 
 class CheckSheet : AppCompatActivity() {
 
-    private val database = FirebaseDatabase.getInstance()
-    private lateinit var snaped : DataSnapshot
+    private val mySnap = MySnap.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_sheet)
 
-        val roomNumber = intent.getIntExtra("ROOM", -1)
-        val lockRef = database.getReference("lock/$roomNumber/lock")
-
-        lockRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snaped = snapshot
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(baseContext, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
-            }
-        })
-
         check2.setOnClickListener {
-            val locked = snaped.value.toString().toInt()
-            if (locked != 1) {
-                check2.isChecked = false
-                Toast.makeText(baseContext, "扉がロックされていません。", Toast.LENGTH_SHORT).show()
-            }
+            check2.isChecked = getChecked()
         }
 
         check_back.setOnClickListener {
@@ -48,7 +26,7 @@ class CheckSheet : AppCompatActivity() {
         check_submit.setOnClickListener {
             val checks = listOf(
                 check1.isChecked,
-                check2.isChecked,
+                    getChecked(),
                 check3.isChecked,
                 check4.isChecked,
             )
@@ -66,5 +44,22 @@ class CheckSheet : AppCompatActivity() {
                 Toast.makeText(baseContext, "チェックボックスが全て埋まっていません。", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    /**
+     * 扉のロックがかかっているか確認するメソッド。check2と連動
+     * param snapshot 扉のロック状況のスナップ
+     * param roomNumber 利用している部屋の番号
+     * param locked 利用している部屋のロック状況(1 or else)
+     */
+    private fun getChecked() : Boolean {
+        val snapshot = mySnap.lockSnapshot
+        val roomNumber = intent.getIntExtra("ROOM", -1)
+        val locked = snapshot.child("$roomNumber/lock").value.toString().toInt()
+        if (locked == 1) {
+            return true
+        }
+        Toast.makeText(baseContext, "扉がロックされていません。", Toast.LENGTH_SHORT).show()
+        return false
     }
 }

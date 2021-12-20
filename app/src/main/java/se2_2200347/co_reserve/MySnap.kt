@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 class MySnap : Application(){
     lateinit var bookSnapshot : DataSnapshot
     lateinit var userSnapshot: DataSnapshot
+    lateinit var lockSnapshot: DataSnapshot
     lateinit var myBooking: DataSnapshot
 
     companion object {

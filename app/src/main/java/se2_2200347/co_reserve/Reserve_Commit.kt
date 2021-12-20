@@ -10,10 +10,19 @@ class Reserve_Commit : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve__commit)
 
+        val ok = intent.getBooleanExtra("OK_FLAG", false)
+        if (ok) {
+            commit_tv.text = getText(R.string.commit_ok)
+        }
+
         re_com_btn.setOnClickListener {
-            val intent = Intent(application, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            if (ok) {
+                val intent = Intent(application, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            } else {
+                finish()
+            }
         }
     }
 }

@@ -24,9 +24,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <TextView
+                android:id="@+id/commit_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="予約が完了しました。\n利用開始時間の１５分前から入室できます。"
+                android:text="@string/commit_ng"
                 android:textSize="26dp"
                 android:textAlignment="center"/>
         </LinearLayout>

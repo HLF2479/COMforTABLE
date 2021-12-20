@@ -77,13 +77,23 @@ class FirebaseReserve {
         testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
     }
 
-    //新規予約を登録するために用いるメソッド
-    fun reg(st : Int , ed : Int , date : String , room : String , ID : String){
-        //st : 新規開始時間   ed : 新規終了時間     rst : 既存開始時間    red : 既存終了時間
+    /**
+     * 新規予約を登録するために用いるメソッド
+     * param st 新規開始時間
+     * param ed 新規終了時間
+     * param date 新規予約日付
+     * param room 新規予約部屋番号
+     * param ID 学籍番号
+     * param newCount 新規予約件数
+     * param rst 既存開始時間
+     * param red 既存終了時間
+     */
+    fun reg (st : Int, ed : Int, date : String, room : String, ID : String, newCount: Int) : Boolean {
         var rst = 0
         var red = 0
         //データ追加可能かどうかの判定を行うフラグ
         var tag = true
+        //既存予約の情報格納用配列
         var stl = arrayListOf<Int>()
         var edl = arrayListOf<Int>()
         var datel = arrayListOf<String>()
@@ -102,6 +112,7 @@ class FirebaseReserve {
             }
         }
 
+        //送信用データ配列
         val regs = mapOf(
                 "date" to date,
                 "book_start" to st.toString(),
@@ -113,7 +124,6 @@ class FirebaseReserve {
         //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
         for (i in stl.indices) {
             //部屋番号と日付の日付が同じ予約のみを判定する
-
             if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
                     stl[i] < ed && ed < edl[i] || //既存の予約終了時間が予約希望時間の間にある場合
                     st <= stl[i] && edl[i] <= ed) {  //既存の予約時間の間に予約希望時間が含まれている場合
@@ -123,7 +133,12 @@ class FirebaseReserve {
 
         }
 //予約にかぶりが発生しなかった場合に登録処理を行う
-        if (tag) { makeCheck(regs) }
+        if (tag) {
+            makeCheck(regs)
+            setCount(ID, newCount)
+            return true
+        }
+        return false
 //        bookRef.orderByChild("book_start").addValueEventListener(object : ValueEventListener {
 //            override fun onDataChange(snapshot: DataSnapshot) {
 //                //めんどくさくなったので配列にぶち込みました
@@ -153,7 +168,7 @@ class FirebaseReserve {
      * param oldStart 旧予約開始時間
      * param oldRoom 旧部屋番号
      */
-    fun reg(st : Int, ed : Int, date : String, room : String, ID : String, oldDate : String?, oldStart : String?, oldRoom : String?) {
+    fun reg (st : Int, ed : Int, date : String, room : String, ID : String, oldDate : String?, oldStart : String?, oldRoom : String?) : Boolean {
         //データ追加可能かどうかの判定を行うフラグ
         var tag = true
         //比較対象になる予約情報を格納する配列
@@ -203,9 +218,18 @@ class FirebaseReserve {
         }
 
         //予約にかぶりが発生しなかった場合に更新処理を行う
-        if (tag) { makeUpdate(regs, key) }
+        if (tag) {
+            makeUpdate(regs, key)
+            return true
+        }
+        return false
     }
 
+    /**
+     * 予約情報を取り消すメソッド
+     * param date 日付
+     * param st 予約開始時間
+     */
     fun delete(date : Long, st : Long, room : Long, ID: String, count : Int){
         val snapshot = mySnap.myBooking
 
@@ -221,6 +245,18 @@ class FirebaseReserve {
                 setCount(ID, newCount)          //新しい予約件数をfirebaseに登録
             }
         }
+    }
+
+    /**
+     * 現在時間が予約情報と一致しているか判定するメソッド
+     * param room 部屋番号
+     * param endKey 予約終了時間
+     */
+    fun getEnabled(room: Int, endKey: Int) : Boolean {
+        val snapshot = mySnap.lockSnapshot
+        val endTime = snapshot.child("$room/end").value.toString().toInt()
+        if (endTime == endKey) return true
+        return false
     }
 
     fun setCount(ID: String, COUNT: Int) {

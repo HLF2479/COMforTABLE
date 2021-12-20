@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zoom部屋オンライン予約システム</string>
+    <string name="app_name">COMforTABLE</string>
     <string name="title">Co-Reserve</string>
     <string name="login">ログイン</string>
     <string name="home">さん</string>
@@ -11,8 +11,13 @@
     <string name="home_entry">入室</string>
     <string name="home_lock">ロック</string>
     <string name="reserve_1">日付を選んでください</string>
+    <string name="onTime_noReserve">予約はありません。</string>
+    <string name="confirm_roomError">部屋番号が異常です。</string>
+    <string name="confirm_resError">予約件数がいっぱいです。\n既に予約している分が完了してから再度お試しください。</string>
+    <string name="commit_ok">予約が完了しました。\n利用開始時間の１５分前から入室できます。</string>
+    <string name="commit_ng">予約時間が重複していたため予約できませんでした。\n申し訳ありません。</string>
     <string name="attention_wait">しばらくお待ちください…</string>
-    <string name="attention_ok">・扉は終了時間の５分後に自動でロックされます。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。\n・もし何か不都合がありましたら、進路指導課までご連絡ください。</string>
+    <string name="attention_ok">・扉は終了時間の５分後に自動でロックされますが、退室時には利用した方が施錠するようにしてください。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。\n・何か不都合がありましたら、進路指導課までご連絡ください。</string>
     <string name="attention_error">予約時間か部屋が違います。\n予約一覧から予約情報を再確認してください。</string>
     <string name="next">次へ</string>
     <string name="back">戻る</string>
@@ -52,8 +57,6 @@
         <item>room 3</item>
         <item>room 4</item>
         <item>room 5</item>
-        <item>room 6</item>
-        <item>room 7</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

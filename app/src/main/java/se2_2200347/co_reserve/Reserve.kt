@@ -14,7 +14,6 @@ class Reserve : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve)
 
-        val count = intent.getIntExtra("COUNT", 0)          //予約件数
         val frFlag = intent.getBooleanExtra("FOR_RESULT", false) //onTimeクラスから遷移してきたかを表すフラグ
 
         // 過去の選択可能日を当日に変更
@@ -55,7 +54,6 @@ class Reserve : AppCompatActivity() {
                     putExtra("MONTH", (month + 1).toString())
                     putExtra("DATE", dayOfMonth.toString())
                     putExtra("DAY", day)
-                    putExtra("COUNT", count)
                 }
                 startActivity(intent)
             }

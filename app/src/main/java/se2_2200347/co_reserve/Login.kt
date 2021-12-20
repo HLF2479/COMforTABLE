@@ -43,6 +43,9 @@ class Login : AppCompatActivity() {
             try {
                 val getPass = snapData.child("$number").child("id_pass").value.toString()
                 if (pass == getPass) {
+                    val key = userRef.child("$number/key").push().key.toString()
+                    userRef.child("$number/key").setValue(key)
+                    editor.putString("KEY", key)
                     editor.putString("NUM", number)
                     editor.apply()
                     val intent = Intent(applicationContext, MainActivity::class.java)
