@@ -22,7 +22,7 @@
                 android:id="@+id/conf_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="RoomXに〇〇月〇〇日△△時◇◇分で予約します。\nよろしいですか？"
+                android:text="@string/confirm_def"
                 android:textSize="30dp"
                 android:textAlignment="center"/>
         </LinearLayout>

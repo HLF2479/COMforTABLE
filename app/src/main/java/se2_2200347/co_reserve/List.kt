@@ -23,6 +23,8 @@ class List : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
+        title = getText(R.string.list_t)
+
         val count = intent.getIntExtra("COUNT", 0)
         val number = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
         val myBook = bookRef.orderByChild("user_id").equalTo("$number")

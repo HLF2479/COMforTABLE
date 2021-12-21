@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,6 +21,21 @@ private val bookRef = database.getReference("booking")
 private val mySnap = MySnap.getInstance()
 
 class Reserve_onTime : AppCompatActivity() {
+
+    //「更新」時に更新元の予約時間と部屋番号を埋め込む処理
+    private val handler = Handler()
+    private val setOrigin = Runnable {
+        val hourS = oldStart.substring(0, 2).toInt() - 9
+        val minS = oldStart.substring(2, 4).toInt() / 15
+        val hourE = oldEnd.substring(0,2).toInt() - 9
+        val minE = oldEnd.substring(2, 4).toInt() / 15
+        val positionR = oldRoom.toInt() - 1
+        re_start_hour.setSelection(hourS)
+        re_start_min.setSelection(minS)
+        re_end_hour.setSelection(hourE)
+        re_end_min.setSelection(minE)
+        re_spi_room.setSelection(positionR)
+    }
 
     //選択中の日付を格納する変数
     private var year = ""       //年
@@ -45,28 +61,33 @@ class Reserve_onTime : AppCompatActivity() {
     private var updateFlag = false  //「更新」かどうかを判定するフラグ(true -> 「更新」、false -> 「予約」)
     private var oldDate = ""        //更新前日付
     private var oldStart = ""       //更新前予約開始時間
+    private var oldEnd = ""         //更新前予約終了時間
     private var oldRoom = ""        //更新前予約部屋番号
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_on_time)
 
+        title = getText(R.string.reserve_t2)
+
         //遷移元から日付情報と更新フラグを取得
         year = intent.getStringExtra("YEAR")!!
-        val f_year = year?.substring(2,4)   //年は下２文字だけ表示させる
+        val year2 = year?.substring(2,4)   //年は下２文字だけ表示させる
         month = intent.getStringExtra("MONTH")!!
         dayOfWeek = intent.getStringExtra("DATE")!!
         day = intent.getIntExtra("DAY", 0)
         updateFlag = intent.getBooleanExtra("UPDATE", false)
 
         //取得した日付情報をテキストにして出力
-        rot_date.text = "${f_year}年${month}月${dayOfWeek}日（${days[day]}）"
+        rot_date.text = "${year2}年${month}月${dayOfWeek}日（${days[day]}）"
 
         //「更新」の場合に、Updatesに情報を格納する
         if (updateFlag) {
             oldDate = year + month + dayOfWeek
             oldStart = intent.getStringExtra("BOOK_S")!!
+            oldEnd = intent.getStringExtra("BOOK_E")!!
             oldRoom = intent.getStringExtra("ROOM")!!
+            handler.post(setOrigin)
         }
 
         bookRef.orderByChild("book_start").addValueEventListener(object : ValueEventListener {
@@ -146,7 +167,7 @@ class Reserve_onTime : AppCompatActivity() {
     }
 
     /**
-     * 現在の処理が「更新」か「予約」かを判定して、対応するメソッドを呼び出すメソッド
+     * 現在の処理が「予約」か「更新」かを判定して、対応するメソッドを呼び出すメソッド
      */
     private fun judgeUpdate() {
         //「更新」なら更新用の、「予約」なら予約用の配列処理をする

@@ -12,6 +12,8 @@ class Reserve_confirmation : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_confirmation)
 
+        title = getText(R.string.reserve_t3)
+
         val id = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
 
         //遷移元から日付と予約時間、更新フラグを取得する
@@ -23,8 +25,14 @@ class Reserve_confirmation : AppCompatActivity() {
 
         //表示用文字列作成のために日付と予約時間を纏める
         val resDate = (date + startTime + endTime).toLong()
+        //「更新」の時は、文字列を変化させる
+        var textR = getText(R.string.home_reserve)
+        if (updateFlag) {
+            textR = getText(R.string.update)
+            title = getText(R.string.reserve_t3u)
+        }
         //纏めた情報から文字列を作成して出力する
-        var viewText = "${Divide(resDate).div16()}\nroom${roomNumber}で予約します。\nよろしいですか？"
+        var viewText = "${Divide(resDate).div16()}\nroom${roomNumber}で${textR}します。\nよろしいですか？"
 
         //スナップからユーザーの予約件数を取得する
         val count = mySnap.userSnapshot.child("counter").value.toString().toInt()
@@ -39,6 +47,9 @@ class Reserve_confirmation : AppCompatActivity() {
             //予約件数が３件を超えている時、または、「更新」ではない状態で予約件数が３件ある時
             viewText = "${getText(R.string.confirm_resError)}"
             en = false
+        }
+        if (!en) {
+            title = getText(R.string.reserve_t3e)
         }
         conf_text.text = viewText
 
@@ -56,6 +67,7 @@ class Reserve_confirmation : AppCompatActivity() {
                 }
                 val intent = Intent(this, Reserve_Commit::class.java)
                 intent.putExtra("OK_FLAG", flag)
+                intent.putExtra("UPDATE", updateFlag)
                 startActivity(intent)
                 finish()
             }

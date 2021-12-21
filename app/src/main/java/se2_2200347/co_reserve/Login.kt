@@ -22,6 +22,8 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        title = getText(R.string.login_t)
+
         val sp = getSharedPreferences("STU_DATA", MODE_PRIVATE)
         val editor = sp.edit()
 

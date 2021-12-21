@@ -33,6 +33,8 @@ class LockUnlock : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lock_unlock)
 
+        title = getText(R.string.lock_t)
+
         val sp = getSharedPreferences("ES", MODE_PRIVATE)
         val endKey = sp.getInt("END", -1)
         val roomNumber = sp.getInt("SWITCH", -1)

@@ -14,17 +14,21 @@ class Release : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_release)
 
-        val sp = getSharedPreferences("ES", MODE_PRIVATE)
-        val ed = sp.edit()
+        title = getText(R.string.release_t)
 
         val roomNumber = intent.getIntExtra("ROOM", -1)
         //予約終了時間をfirebaseにアップする(ESP側で判定する用)
         val bookEnd = intent.getIntExtra("END", -9)
         lockRef.child("$roomNumber/end").setValue("$bookEnd")
 
-        //部屋番号、終了時間を内部ストレージに保存
+        val key = intent.getStringExtra("KEY")
+
+        //部屋番号、終了時間、予約情報のキー値を内部ストレージに保存
+        val es = getSharedPreferences("ES", MODE_PRIVATE)
+        val ed = es.edit()
         ed.putInt("SWITCH", roomNumber)
         ed.putInt("END", bookEnd)
+        ed.putString("KEY", key)
         ed.apply()
 
         val text = "ROOM${roomNumber}のロックを解除しました。\n終了時間にご注意ください。"

@@ -22,6 +22,8 @@ class Reader : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reader)
 
+        title = getText(R.string.reader_t)
+
         flag = true
 
         checkPermissions()
@@ -89,13 +91,13 @@ class Reader : AppCompatActivity() {
             override fun barcodeResult(result: BarcodeResult?) {
                 val resA = result.toString().toInt() / 10000 * 4
                 val resB = result.toString().toInt() % 10000 * 3
-                val sum = resB - resA
+                val room = resB - resA
                 if (result != null && flag) {
                     onPause()
                     flag = false
                     Log.d("QRCode", "$result")
                     val intent = Intent(applicationContext, Attention::class.java)
-                    intent.putExtra("ROOM", sum)
+                    intent.putExtra("ROOM", room)
                     startActivity(intent)
                     finish()
                 }

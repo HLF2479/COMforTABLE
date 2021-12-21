@@ -19,12 +19,15 @@ class Attention : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_attention)
 
+        title = getText(R.string.enter_te)
+
         val snapshot = mySnap.myBooking
         val roomNumber = intent.getIntExtra("ROOM", -1)
 
         val localD = LocalDate.now()    //現在日付
         val localT = LocalTime.now()    //現在時刻
 
+        var key = ""
         var resStart : Int  //予約情報の予約開始時間
         var resEnd = -9     //予約情報の予約首領時間
         var resRoom : Int   //予約情報の予約部屋番号
@@ -45,6 +48,7 @@ class Attention : AppCompatActivity() {
             //日付が一致した場合に一致判定フラグを是にして時刻判定する
             if (localD == compDate) {
                 flagD = true    //日付の一致判定フラグを是にする
+
                 //予約情報から開始時間と終了時間を取得してlocalTimeに変換する
                 resStart = i.child("book_start").value.toString().toInt()
                 resEnd = i.child("book_end").value.toString().toInt()
@@ -61,14 +65,18 @@ class Attention : AppCompatActivity() {
                 resRoom = i.child("room").value.toString().toInt()
                 Log.d("LOCAL_ROOM", "room$resRoom")
 
-                //部屋番号の一致、開始時間 ＜ 現在時間 ＜ 終了時間 の成立が両立されていれば、時刻の一致判定フラグを是にする
-                if (compS < localT && localT < compE && resRoom == roomNumber) flagT = true
+                //部屋番号の一致、開始時間 ＜ 現在時間 ＜ 終了時間 の成立が両立されていれば、時刻の一致判定フラグを是にしてキー値を取得する
+                if (compS < localT && localT < compE && resRoom == roomNumber) {
+                    flagT = true
+                    key = i.key.toString()
+                }
             }
         }
 
         //エラー文をセットし、日付、時刻の一致判定フラグが是なら次に進む文章をセットしなおす
         var text = getText(R.string.attention_error)
         if (flagD && flagT) {
+            title = getText(R.string.enter_ta)
             text = getText(R.string.attention_ok)
             attention_submit.text = getText(R.string.next)
             okFlag = true   //完全一致フラグを是にする
@@ -80,6 +88,7 @@ class Attention : AppCompatActivity() {
                 val intent = Intent(this, Release::class.java)
                 intent.putExtra("ROOM", roomNumber)
                 intent.putExtra("END", resEnd)
+                intent.putExtra("KEY", key)
                 startActivity(intent)
                 finish()
             } else {

@@ -37,6 +37,7 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
 
         val date = dateList[position] / 1000000000          //年月日情報
         val bookStart = dateList[position] / 100000 % 10000 //予約開始時間
+        val bookEnd = dateList[position] / 10 % 10000       //予約終了時間
         val room = dateList[position] % 10                  //部屋番号
 
         updater.setOnClickListener {
@@ -46,6 +47,7 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
             val dayOfMonth = date % 100     //日
             var dayOfWeek : Int             //曜日(数値)
 
+            //選択されている日付から曜日情報を取得して、数値化する
             val localDate = LocalDate.parse("$year-$month-$dayOfMonth")
             val day = localDate.dayOfWeek
             dayOfWeek = when (day) {
@@ -65,6 +67,7 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
                 putExtra("DATE", dayOfMonth.toString())
                 putExtra("DAY", dayOfWeek)
                 putExtra("BOOK_S", "$bookStart")
+                putExtra("BOOK_E", "$bookEnd")
                 putExtra("ROOM", "$room")
                 putExtra("UPDATE", true)
             }
@@ -75,12 +78,12 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
             val builder = AlertDialog.Builder(context)
             builder.setTitle("予約取消")
                     .setMessage("${reserve}の予約を取り消します。\nよろしいですか？")
-                    .setPositiveButton("取消", DialogInterface.OnClickListener { dialog, which ->
+                    .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, which ->
                         //各ユーザーの予約情報の内、対応したものを削除する
                         FirebaseReserve().delete(date, bookStart, room, userNumber, count)
                         Toast.makeText(context, "予約を取り消しました", Toast.LENGTH_SHORT).show()
                     })
-                    .setNegativeButton("戻る", DialogInterface.OnClickListener { dialog, which ->  })
+                    .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
         }
 

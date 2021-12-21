@@ -34,7 +34,12 @@ class MainActivity : AppCompatActivity() {
         val number = sp.getString("NUM", "")
         var count = 0
 
-        var flag = false
+        val es = getSharedPreferences("ES", MODE_PRIVATE)
+        val switch = es.getInt("SWITCH", -1)
+        val endKey = es.getInt("END", -1)
+
+        title = getText(R.string.home_t)
+
         if (number == "") {
             TitleOneway()
         } else {
@@ -47,7 +52,6 @@ class MainActivity : AppCompatActivity() {
                         st_num.text = number
                         st_name.text = snapshot.child("name").value.toString()
                         count = snapshot.child("counter").value.toString().toInt()
-                        flag = true
                     } else {
                         Toast.makeText(baseContext, "他の端末からログインがありました。", Toast.LENGTH_SHORT).show()
                         val editor = sp.edit()
@@ -63,27 +67,29 @@ class MainActivity : AppCompatActivity() {
 
             bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (flag) {
-                        mySnap.myBooking = snapshot
-                        var reff = arrayListOf<Long>()
-                        try {
-                            for (i in snapshot.children) {
-                                val date = i.child("date").value.toString().toLong()
-                                var convD = date * 10000
-                                val time = i.child("book_start").value.toString().toLong()
-                                convD += time
-                                reff.add(convD)
-                            }
-                            reff.sort()
+                    mySnap.myBooking = snapshot
+                    var reff = arrayListOf<Long>()
+                    try {
+                        for (i in snapshot.children) {
+                            val date = i.child("date").value.toString().toLong()
+                            var convD = date * 10000
+                            val time = i.child("book_start").value.toString().toLong()
+                            convD += time
+                            reff.add(convD)
+                        }
+                        reff.sort()
+                        if (switch != -1 && endKey != -1) {
+                            time_txt.text = getText(R.string.home_entered)
+                        } else {
                             val resText = Divide(reff[0]).div12()
                             time_txt.text = resText[0]
-                            time_txt.textSize = 84F
                             date_txt.text = resText[1]
-                        } catch (e: Exception) {
-                            time_txt.text = "予約がありません"
-                            time_txt.textSize = 40F
-                            date_txt.text = ""
                         }
+                        time_txt.textSize = 84F
+                    } catch (e: Exception) {
+                        time_txt.text = "予約がありません"
+                        time_txt.textSize = 40F
+                        date_txt.text = ""
                     }
                 }
 
@@ -130,9 +136,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btn_lock.setOnClickListener {
-            val es = getSharedPreferences("ES", MODE_PRIVATE)
-            val switch = es.getInt("SWITCH", -1)
-            val endKey = es.getInt("END", -1)
             when {
                 switch == -1 -> {
                     val builder = AlertDialog.Builder(this)
@@ -169,10 +172,16 @@ class MainActivity : AppCompatActivity() {
         super.onOptionsItemSelected(item)
         return when (item.itemId) {
             R.id.logout -> {
-                val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
-                val editor = sp.edit()
-                editor.clear().apply()
-                TitleOneway()
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("確認").setMessage("ログアウトします。\nよろしいですか？")
+                        .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, which ->
+                            val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
+                            val editor = sp.edit()
+                            editor.clear().apply()
+                            TitleOneway()
+                        })
+                        .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, which ->  })
+                builder.show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
