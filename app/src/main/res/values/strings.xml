@@ -6,6 +6,19 @@
     <string name="login">ログイン</string>
     <string name="login_t">ログイン画面</string>
     <string name="home_t">ホーム</string>
+    <string name="other_log">他端末からのログインがありました。</string>
+    <string name="error_firebase">読み込みに失敗しました。</string>
+    <string name="no_reserve">予約がありません</string>
+    <string name="lo_title">確認</string>
+    <string name="logout">ログアウトします。\nよろしいですか？</string>
+    <string name="attention">
+        ・このアプリは、４号館にあるオンライン会議などで利用できる個室を予約するためのものです。\n
+        ・部屋は予約時間から利用可能になるため、時間に余裕をもって予約するようにしてください。\n
+        ・なにか問題が起こりましたら、進路指導課(TEL:06-6376-4733)までご連絡ください。
+    </string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="att_title">注意事項</string>
     <string name="home">さん</string>
     <string name="number">学籍番号：</string>
     <string name="reserved">次回予約</string>
@@ -15,6 +28,18 @@
     <string name="home_list">一覧</string>
     <string name="home_entry">入室</string>
     <string name="home_lock">ロック</string>
+    <string name="er_title">予約数オーバー</string>
+    <string name="error_reserve">
+        予約数が３件に到達しています。\n
+        これ以上は予約できません。
+    </string>
+    <string name="error">エラー</string>
+    <string name="error_enter">既に入室中です。</string>
+    <string name="error_lock1">
+        部屋に入室していません。\n
+        ロックボタンは、入室の処理が完了すると使用可能になります。
+    </string>
+    <string name="error_lock2">部屋の利用時間外です。</string>
     <string name="reserve_t1">日付選択</string>
     <string name="reserve_1">日付を選んでください</string>
     <string name="reserve_t2">時間選択</string>
@@ -22,25 +47,46 @@
     <string name="reserve_t3">最終確認</string>
     <string name="reserve_t3e">予約情報エラー</string>
     <string name="reserve_t3u">更新確認</string>
-    <string name="confirm_def">RoomXに〇〇月〇〇日△△時◇◇分で予約します。\nよろしいですか？</string>
+    <string name="confirm_def">
+        RoomXに〇〇月〇〇日△△時◇◇分で予約します。\n
+        よろしいですか？
+    </string>
     <string name="confirm_roomError">部屋番号が異常です。</string>
-    <string name="confirm_resError">予約件数がいっぱいです。\n既に予約している分が完了してから再度お試しください。</string>
+    <string name="confirm_resError">
+        予約件数がいっぱいです。\n
+        既に予約している分が完了してから再度お試しください。
+    </string>
     <string name="reserve_t4s">予約完了</string>
     <string name="reserve_t4u">更新完了</string>
-    <string name="commit_ok">予約が完了しました。\n予約した部屋は、開始時間が過ぎてから利用できます。</string>
-    <string name="update_ok">予約を更新しました。\n予約した部屋は、開始時間が過ぎてから利用できます。</string>
+    <string name="commit_ok">
+        予約が完了しました。\n
+        予約した部屋は、開始時間が過ぎてから利用できます。
+    </string>
+    <string name="update_ok">
+        予約を更新しました。\n
+        予約した部屋は、開始時間が過ぎてから利用できます。
+    </string>
     <string name="reserve_t4e">予約失敗</string>
-    <string name="commit_ng">予約時間が重複していたため予約できませんでした。\n申し訳ありません。</string>
+    <string name="commit_ng">
+        予約時間が重複していたため予約できませんでした。\n
+        申し訳ありません。
+    </string>
     <string name="list_t">予約一覧</string>
     <string name="list_def">ここに日時と部屋番号が表示されるよ</string>
     <string name="update">更新</string>
     <string name="list_del">取消</string>
     <string name="reader_t">ＱＲコード読み取り</string>
-    <string name="enter_ta">注意事項</string>
     <string name="attention_wait">しばらくお待ちください…</string>
-    <string name="attention_ok">・扉は終了時間の５分後に自動でロックされますが、退室時には利用した方が施錠するようにしてください。\n・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。\n・何か不都合がありましたら、進路指導課までご連絡ください。</string>
+    <string name="attention_ok">
+        ・扉は終了時間の５分後に自動でロックされますが、退室時には利用した方が施錠するようにしてください。\n
+        ・利用後は必ずチェックシートを全て埋め、退出処理を済ませてから退出してください。\n
+        ・何か不都合がありましたら、進路指導課までご連絡ください。
+    </string>
     <string name="enter_te">部屋番号エラー</string>
-    <string name="attention_error">予約時間か部屋が違います。\n予約一覧から予約情報を再確認してください。</string>
+    <string name="attention_error">
+        予約時間か部屋が違います。\n
+        予約一覧から予約情報を再確認してください。
+    </string>
     <string name="next">次へ</string>
     <string name="back">戻る</string>
     <string name="release_t">ロック解除</string>
@@ -53,7 +99,10 @@
     <string name="check4">　PC、マウス等は除菌しましたか？</string>
     <string name="check_back">ボタンに戻る</string>
     <string name="quit_t">退出完了</string>
-    <string name="quit">退出が完了しました。\n部屋を綺麗にご利用いただき、\nありがとうございます。</string>
+    <string name="quit">
+        退出が完了しました。\n
+        部屋を綺麗にご利用いただき、\n
+        ありがとうございます。</string>
     <string name="complete">完了</string>
 
     <string name="time_reserve_s">開始予定時刻：</string>

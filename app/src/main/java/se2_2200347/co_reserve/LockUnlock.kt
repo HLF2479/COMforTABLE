@@ -24,7 +24,7 @@ class LockUnlock : AppCompatActivity() {
             unlock_btn.isEnabled = flags[c]
             lock_btn.isEnabled = flags[c]
             if (c == 1) {
-                handler.postDelayed(this, 3000)
+                handler.postDelayed(this, 2000)
             }
         }
     }

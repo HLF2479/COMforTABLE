@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import kotlinx.android.synthetic.main.activity_attention.*
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 private val mySnap = MySnap.getInstance()
 
@@ -76,7 +75,7 @@ class Attention : AppCompatActivity() {
         //エラー文をセットし、日付、時刻の一致判定フラグが是なら次に進む文章をセットしなおす
         var text = getText(R.string.attention_error)
         if (flagD && flagT) {
-            title = getText(R.string.enter_ta)
+            title = getText(R.string.att_title)
             text = getText(R.string.attention_ok)
             attention_submit.text = getText(R.string.next)
             okFlag = true   //完全一致フラグを是にする

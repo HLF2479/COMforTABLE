@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                         st_name.text = snapshot.child("name").value.toString()
                         count = snapshot.child("counter").value.toString().toInt()
                     } else {
-                        Toast.makeText(baseContext, "他の端末からログインがありました。", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(baseContext, R.string.other_log, Toast.LENGTH_SHORT).show()
                         val editor = sp.edit()
                         editor.clear().apply()
                         TitleOneway()
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(baseContext, "名前の読み込みに失敗しました。", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show()
                 }
             })
 
@@ -87,14 +87,14 @@ class MainActivity : AppCompatActivity() {
                         }
                         time_txt.textSize = 84F
                     } catch (e: Exception) {
-                        time_txt.text = "予約がありません"
+                        time_txt.text = getText(R.string.no_reserve)
                         time_txt.textSize = 40F
                         date_txt.text = ""
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(baseContext, "予約日の読み込みに失敗しました", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show()
                 }
             })
 
@@ -107,9 +107,9 @@ class MainActivity : AppCompatActivity() {
         btn_reserve.setOnClickListener {
             if (count >= 3) {
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("予約数オーバー")
-                builder.setMessage("予約数が３件に到達しています。\nこれ以上は予約できません。")
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->  })
+                builder.setTitle(R.string.er_title)
+                builder.setMessage(R.string.error_reserve)
+                builder.setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which ->  })
                 builder.show()
             } else {
                 val intent = Intent(this, Reserve::class.java)
@@ -126,9 +126,9 @@ class MainActivity : AppCompatActivity() {
             val flag = es.getInt("SWITCH", -1)
             if (flag != -1) {
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("エラー")
-                        .setMessage("既に入室中です。")
-                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                builder.setTitle(R.string.error)
+                        .setMessage(R.string.error_enter)
+                        .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which -> })
                 builder.show()
             } else {
                 val intent = Intent(this, Reader::class.java)
@@ -139,16 +139,16 @@ class MainActivity : AppCompatActivity() {
             when {
                 switch == -1 -> {
                     val builder = AlertDialog.Builder(this)
-                    builder.setTitle("エラー")
-                            .setMessage("部屋に入室していません。\nロックボタンは、入室の処理が完了すると使用可能になります。")
-                            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                    builder.setTitle(R.string.error)
+                            .setMessage(R.string.error_lock1)
+                            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which -> })
                     builder.show()
                 }
                 !firebase.getEnabled(switch, endKey) -> {
                     val builder = AlertDialog.Builder(this)
-                    builder.setTitle("エラー")
-                            .setMessage("部屋の利用時間外です。")
-                            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                    builder.setTitle(R.string.error)
+                            .setMessage(R.string.error_lock2)
+                            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which -> })
                     builder.show()
                     es.edit().putInt("SWITCH", -1).apply()
                 }
@@ -173,14 +173,22 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.logout -> {
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("確認").setMessage("ログアウトします。\nよろしいですか？")
-                        .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, which ->
+                builder.setTitle(R.string.lo_title).setMessage(R.string.logout)
+                        .setPositiveButton(R.string.yes, DialogInterface.OnClickListener { dialog, which ->
                             val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
                             val editor = sp.edit()
                             editor.clear().apply()
                             TitleOneway()
                         })
-                        .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, which ->  })
+                        .setNegativeButton(R.string.no, DialogInterface.OnClickListener { dialog, which ->  })
+                builder.show()
+                true
+            }
+            R.id.attention -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle(R.string.att_title)
+                    .setMessage(R.string.attention)
+                    .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which -> })
                 builder.show()
                 true
             }
