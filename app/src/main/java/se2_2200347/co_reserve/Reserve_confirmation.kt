@@ -63,7 +63,7 @@ class Reserve_confirmation : AppCompatActivity() {
                     val oldDate = intent.getStringExtra("OLD_DATE")!!   //更新前予約日
                     val oldStart = intent.getStringExtra("OLD_START")!! //更新前予約開始時間
                     val oldRoom = intent.getStringExtra("OLD_ROOM")!!   //更新前予約部屋番号
-                    flag = firebase.reg(startTime.toInt(), endTime.toInt(), date, roomNumber.toString(), id, oldDate, oldStart, oldRoom)
+                    flag = firebase.upd(startTime.toInt(), endTime.toInt(), date, roomNumber.toString(), id, oldDate, oldStart, oldRoom)
                 }
                 val intent = Intent(this, Reserve_Commit::class.java)
                 intent.putExtra("OK_FLAG", flag)

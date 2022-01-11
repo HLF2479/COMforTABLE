@@ -13,33 +13,36 @@ class Title : AppCompatActivity() {
 
     private val handler = Handler()
     private var count = 0
-    private val scrOn = object : Runnable {
-        override fun run() {
-            title_img.setImageResource(R.drawable.title2_w)
-            title_login.background = getDrawable(R.drawable.title_colorw)
-            if (count == 0) {
-                count = 1
-                handler.postDelayed(this, 700)
-            } else if (count == 1) {
-                count = 0
-                val intent = Intent(applicationContext, Login::class.java)
-                startActivity(intent)
-            }
-        }
-    }
+//    private val scrOn = object : Runnable {
+//        override fun run() {
+//            title_img.setImageResource(R.drawable.title2_w)
+//            title_login.background = getDrawable(R.drawable.title_colorw)
+//            if (count == 0) {
+//                count = 1
+//                handler.postDelayed(this, 700)
+//            } else if (count == 1) {
+//                count = 0
+//                val intent = Intent(applicationContext, Login::class.java)
+//                startActivity(intent)
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title)
 
         tit_btn.setOnClickListener {
-            handler.post(scrOn)
+//            handler.post(scrOn)
+        val intent = Intent(applicationContext, Login::class.java)
+        startActivity(intent)
         }
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        title_img.setImageResource(R.drawable.title2_b)
-        title_login.background = getDrawable(R.drawable.title_colorg)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        title_img.setImageResource(R.drawable.title2_b)
+//        title_login.background = getDrawable(R.drawable.title_colorg)
+//    }
 }

@@ -33,7 +33,7 @@ class Reserve : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_WEEK)
             if (day == Calendar.SUNDAY) {
                 //選択した日付が日曜日なら、予約できない旨を出力して処理を終える
-                val builder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog))
+                val builder = AlertDialog.Builder(this)
                 builder.setTitle("エラー")
                 builder.setMessage("この日は日曜日なので選択できません")
                 builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })

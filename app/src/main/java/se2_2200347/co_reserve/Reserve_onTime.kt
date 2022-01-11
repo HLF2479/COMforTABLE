@@ -2,18 +2,21 @@ package se2_2200347.co_reserve
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_reserve_on_time.*
+import java.time.LocalDateTime
 
 private val database = FirebaseDatabase.getInstance()
 private val bookRef = database.getReference("booking")
@@ -64,6 +67,7 @@ class Reserve_onTime : AppCompatActivity() {
     private var oldEnd = ""         //更新前予約終了時間
     private var oldRoom = ""        //更新前予約部屋番号
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_on_time)
@@ -83,7 +87,7 @@ class Reserve_onTime : AppCompatActivity() {
 
         //「更新」の場合に、Updatesに情報を格納する
         if (updateFlag) {
-            oldDate = year + month + dayOfWeek
+            oldDate = setDateForOne()
             oldStart = intent.getStringExtra("BOOK_S")!!
             oldEnd = intent.getStringExtra("BOOK_E")!!
             oldRoom = intent.getStringExtra("ROOM")!!
@@ -124,8 +128,13 @@ class Reserve_onTime : AppCompatActivity() {
             val startTime = startHour + startMinute
             val endTime = endHour + endMinute
 
-            if (startTime.toInt() < endTime.toInt()) {
-                //予約開始時間が予約終了時間より前なら、次の画面に遷移する
+            //予約開始時間が現在時刻より前の場合にエラーを出すための変数
+            val selDt = LocalDateTime.of(year.toInt(), month.toInt(), dayOfWeek.toInt(), startHour.toInt(), startMinute.toInt(), 0)
+            val nowDt = LocalDateTime.now()
+
+            if (startTime.toInt() < endTime.toInt() //予約開始時間が予約終了時間より前の時
+                    && selDt > nowDt) {             //予約開始時間が現在時刻より大きい時
+                //各種情報をもって次の画面に遷移する
                 val intent = Intent(this, Reserve_confirmation::class.java)
                 intent.apply {
                     putExtra("DATE", resDate)
@@ -184,7 +193,7 @@ class Reserve_onTime : AppCompatActivity() {
      */
     private fun setReserves() {
         val dataSnapshot = mySnap.bookSnapshot
-        val sel = year + month + dayOfWeek
+        val sel = setDateForOne()
 
         clearList()
 
@@ -204,7 +213,7 @@ class Reserve_onTime : AppCompatActivity() {
      */
     private fun setForUpdate() {
         val dataSnapshot = mySnap.bookSnapshot
-        val sel = year + month + dayOfWeek
+        val sel = setDateForOne()
 
         clearList()
 
@@ -220,6 +229,18 @@ class Reserve_onTime : AppCompatActivity() {
 
         setNull()
         setList()
+    }
+
+    /**
+     * 日付(月日)が１桁の場合に起こる不具合を回避するためのメソッド
+     */
+    private fun setDateForOne() : String {
+        var month = month
+        var day = dayOfWeek
+        //月日が１桁の時に前に"0"を追加する
+        if (month.length == 1) month = "0$month"
+        if (day.length == 1) day == "0$day"
+        return year + month + day
     }
 
     /**

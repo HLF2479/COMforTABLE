@@ -37,24 +37,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
-                    <TextView
-                        android:id="@+id/update_tv"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:gravity="right"
-                        android:paddingTop="5dp"
-                        android:text="@string/update"
-                        android:textColor="@color/purple_700" />
-                    <TextView
-                        android:id="@+id/remove_tv"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5">
+                        <TextView
+                            android:id="@+id/update_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:paddingTop="5dp"
+                            android:text="@string/update"
+                            android:textColor="@color/purple_700" />
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:gravity="right"
-                        android:paddingTop="5dp"
-                        android:text="@string/list_del"
-                        android:textColor="@color/purple_700" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5">
+                        <TextView
+                            android:id="@+id/remove_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:paddingTop="5dp"
+                            android:text="@string/list_del"
+                            android:textColor="@color/purple_700" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

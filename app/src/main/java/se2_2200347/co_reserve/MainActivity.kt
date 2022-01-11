@@ -40,6 +40,13 @@ class MainActivity : AppCompatActivity() {
 
         title = getText(R.string.home_t)
 
+//        //各種内部ストレージ情報をリセット
+//        val ed = es.edit()
+//        ed.putInt("SWITCH", -1)
+//        ed.putInt("END", -1)
+//        ed.putString("KEY", "")
+//        ed.apply()
+
         if (number == "") {
             TitleOneway()
         } else {
@@ -136,15 +143,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btn_lock.setOnClickListener {
+            val es = getSharedPreferences("ES", MODE_PRIVATE)
+            val flag = es.getInt("SWITCH", -1)
+            val end = es.getInt("END", -1)
             when {
-                switch == -1 -> {
+                flag == -1 -> {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle(R.string.error)
                             .setMessage(R.string.error_lock1)
                             .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which -> })
                     builder.show()
                 }
-                !firebase.getEnabled(switch, endKey) -> {
+                !firebase.getEnabled(flag, end) -> {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle(R.string.error)
                             .setMessage(R.string.error_lock2)
@@ -204,5 +214,16 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, Title::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val es = getSharedPreferences("ES", MODE_PRIVATE)
+        val switch = es.getInt("SWITCH", -1)
+        val endKey = es.getInt("END", -1)
+        if (switch != -1 && endKey != -1) {
+            time_txt.text = getText(R.string.home_entered)
+            date_txt.text = ""
+        }
     }
 }

@@ -154,9 +154,7 @@ class FirebaseReserve {
      * param oldStart 旧予約開始時間
      * param oldRoom 旧部屋番号
      */
-    fun reg (st : Int, ed : Int, date : String, room : String, ID : String, oldDate : String?, oldStart : String?, oldRoom : String?) : Boolean {
-        //データ追加可能かどうかの判定を行うフラグ
-        var tag = true
+    fun upd (st : Int, ed : Int, date : String, room : String, ID : String, oldDate : String?, oldStart : String?, oldRoom : String?) : Boolean {
         //比較対象になる予約情報を格納する配列
         val stl = arrayListOf<Int>()        //開始時間
         val edl = arrayListOf<Int>()        //終了時間
@@ -169,7 +167,8 @@ class FirebaseReserve {
         //めんどくさくなったので配列にぶち込みました
         for (i in snapshot.children) {
             val iDate = i.child("date").value.toString()        //日付
-            val iStart = i.child("book_start").value.toString() //開始時間
+            var iStart = i.child("book_start").value.toString() //開始時間
+            if (iStart.length == 3) iStart = "0$iStart"               //9時台の時に"0"を追加
             val iRoom = i.child("room").value.toString()        //部屋番号
             if (iDate == oldDate && iStart == oldStart && iRoom == oldRoom) {
                 //日時、開始終了が旧予約と一致する場合、配列に登録せずにキー値だけ変数に保存
@@ -182,6 +181,7 @@ class FirebaseReserve {
                 rooml.add(iRoom)
             }
         }
+        Log.d("KEY_CODE", key)
 
 //        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
         //送信用データ配列
@@ -194,6 +194,7 @@ class FirebaseReserve {
         )
 
         //スナップショット内のデータを参照し、範囲内に予約がある場合にはエラーを返す
+        var tag = true  //データ追加可能かどうかの判定を行うフラグ
         for (i in 0 until stl.size) {
             //部屋番号と日付の日付が同じ予約のみを判定する
             if (stl[i] < st && st < edl[i] || //既存の予約の開始時間が希望予約時間の間にある場合
@@ -278,6 +279,6 @@ class FirebaseReserve {
      * param room 部屋番号
      */
     fun setNine(room: Int) {
-        lockRef.child("$room").child("end").setValue(-9)
+        lockRef.child("$room").child("end").setValue("-9")
     }
 }

@@ -48,7 +48,8 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
             var dayOfWeek : Int             //曜日(数値)
 
             //選択されている日付から曜日情報を取得して、数値化する
-            val localDate = LocalDate.parse("$year-$month-$dayOfMonth")
+//            val localDate = LocalDate.parse("$year-$month-$dayOfMonth")
+            val localDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
             val day = localDate.dayOfWeek
             dayOfWeek = when (day) {
                 DayOfWeek.SUNDAY -> 1
@@ -66,8 +67,8 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
                 putExtra("MONTH", month.toString())
                 putExtra("DATE", dayOfMonth.toString())
                 putExtra("DAY", dayOfWeek)
-                putExtra("BOOK_S", "$bookStart")
-                putExtra("BOOK_E", "$bookEnd")
+                putExtra("BOOK_S", "%04d".format(bookStart))
+                putExtra("BOOK_E", "%04d".format(bookEnd))
                 putExtra("ROOM", "$room")
                 putExtra("UPDATE", true)
             }
