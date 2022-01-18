@@ -12,7 +12,7 @@ class Reserve_confirmation : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_confirmation)
 
-        title = getText(R.string.reserve_t3)
+        title = getText(R.string.rcf_tit)
 
         val id = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
 
@@ -29,7 +29,7 @@ class Reserve_confirmation : AppCompatActivity() {
         var textR = getText(R.string.home_reserve)
         if (updateFlag) {
             textR = getText(R.string.update)
-            title = getText(R.string.reserve_t3u)
+            title = getText(R.string.rcf_tit_u)
         }
         //纏めた情報から文字列を作成して出力する
         var viewText = "${Divide(resDate).div16()}\nroom${roomNumber}で${textR}します。\nよろしいですか？"
@@ -41,15 +41,15 @@ class Reserve_confirmation : AppCompatActivity() {
         //各異常に対して専用のテキストを出力する
         if (roomNumber < 1 || roomNumber > 5) {
             //部屋番号が異常な範囲の時
-            viewText = "${getText(R.string.confirm_roomError)}"
+            viewText = "${getText(R.string.rcf_roomError)}"
             en = false
         } else if (count > 3 || (!updateFlag && count == 3)) {
             //予約件数が３件を超えている時、または、「更新」ではない状態で予約件数が３件ある時
-            viewText = "${getText(R.string.confirm_resError)}"
+            viewText = "${getText(R.string.rcf_resError)}"
             en = false
         }
         if (!en) {
-            title = getText(R.string.reserve_t3e)
+            title = getText(R.string.rcf_tit_e)
         }
         conf_text.text = viewText
 

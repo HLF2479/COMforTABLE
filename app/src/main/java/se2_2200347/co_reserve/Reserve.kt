@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_reserve.*
 import java.util.*
@@ -14,7 +13,7 @@ class Reserve : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve)
 
-        title = getText(R.string.reserve_t1)
+        title = getText(R.string.reserve_tit)
 
         val frFlag = intent.getBooleanExtra("FOR_RESULT", false) //onTimeクラスから遷移してきたかを表すフラグ
 

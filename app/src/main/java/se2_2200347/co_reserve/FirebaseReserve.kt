@@ -117,8 +117,8 @@ class FirebaseReserve {
         //送信用データ配列
         val regs = mapOf(
                 "date" to date,
-                "book_start" to st.toString(),
-                "book_end" to ed.toString(),
+                "book_start" to "%04d".format(st),
+                "book_end" to "%04d".format(ed),
                 "room" to room,
                 "user_id" to ID
         )
@@ -181,14 +181,13 @@ class FirebaseReserve {
                 rooml.add(iRoom)
             }
         }
-        Log.d("KEY_CODE", key)
 
 //        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
         //送信用データ配列
         val regs = mapOf (
                 "date" to date,
-                "book_start" to st.toString(),
-                "book_end" to ed.toString(),
+                "book_start" to "%04d".format(st),
+                "book_end" to "%04d".format(ed),
                 "room" to room,
                 "user_id" to ID
         )
@@ -218,7 +217,7 @@ class FirebaseReserve {
      * param date 日付
      * param st 予約開始時間
      */
-    fun delete(date : Long, st : Long, room : Long, ID: String, count : Int){
+    fun cancel(date : Long, st : Long, room : Long){
         val snapshot = mySnap.myBooking
 
         var key : String    //削除したい予約情報のキー値を格納する変数
@@ -228,11 +227,23 @@ class FirebaseReserve {
             val keyRoom = i.child("room").value.toString().toLong()         //部屋番号
             if (keyDate == date && keyStart == st && keyRoom == room) {    //上記の変数３つに当てはまるか判定
                 key = i.key.toString()          //予約番号キーを取得
-                val newCount = count - 1        //新しい予約件数
-                bookRef.child(key).removeValue()//取得したキーの予約情報を削除
-                setCount(ID, newCount)          //新しい予約件数をfirebaseに登録
+                delete(key)
             }
         }
+    }
+
+    /**
+     * 予約情報を削除し、対応するユーザーの予約件数を１減らすメソッド
+     * param k 予約情報のキー値
+     * param id String ユーザーID
+     * param count Int 削除後にユーザーがもつ予約件数
+     */
+    fun delete(k: String) {
+        bookRef.child(k).removeValue()
+        val snapshot = mySnap.userSnapshot
+        val id = snapshot.key.toString()
+        val count = "${snapshot.child("counter").value}".toInt() - 1
+        setCount(id, count)
     }
 
     /**
@@ -250,7 +261,7 @@ class FirebaseReserve {
                 "user_id" to snapshot.child("user_id").value.toString()
         )
         makeLog(reg)
-        bookRef.child(key).removeValue()
+        delete(key)
     }
 
     /**

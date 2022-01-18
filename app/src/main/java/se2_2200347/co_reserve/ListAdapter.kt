@@ -2,7 +2,6 @@ package se2_2200347.co_reserve
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
@@ -16,13 +15,11 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import kotlin.collections.ArrayList
 
-class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>, ID: String, count: Int): BaseAdapter(){
+class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>): BaseAdapter(){
 
     private val context = context
     private val userList = userList
     private val dateList = DateList
-    private val userNumber = ID
-    private var count = count
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -77,14 +74,14 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
 
         remover.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("予約取消")
+            builder.setTitle(R.string.la_cancel)
                     .setMessage("${reserve}の予約を取り消します。\nよろしいですか？")
-                    .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, which ->
+                    .setPositiveButton(R.string.yes){ dialog, which ->
                         //各ユーザーの予約情報の内、対応したものを削除する
-                        FirebaseReserve().delete(date, bookStart, room, userNumber, count)
-                        Toast.makeText(context, "予約を取り消しました", Toast.LENGTH_SHORT).show()
-                    })
-                    .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, which ->  })
+                        FirebaseReserve().cancel(date, bookStart, room)
+                        Toast.makeText(context, R.string.la_cancel_mes, Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, which ->  }
             builder.show()
         }
 

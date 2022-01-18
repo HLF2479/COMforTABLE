@@ -1,6 +1,5 @@
 package se2_2200347.co_reserve
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -72,13 +71,14 @@ class Reserve_onTime : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_on_time)
 
-        title = getText(R.string.reserve_t2)
+        title = getText(R.string.rot_tit)
 
         //遷移元から日付情報と更新フラグを取得
         year = intent.getStringExtra("YEAR")!!
         val year2 = year?.substring(2,4)   //年は下２文字だけ表示させる
         month = intent.getStringExtra("MONTH")!!
         dayOfWeek = intent.getStringExtra("DATE")!!
+        replace02d()
         day = intent.getIntExtra("DAY", 0)
         updateFlag = intent.getBooleanExtra("UPDATE", false)
 
@@ -87,7 +87,7 @@ class Reserve_onTime : AppCompatActivity() {
 
         //「更新」の場合に、Updatesに情報を格納する
         if (updateFlag) {
-            oldDate = setDateForOne()
+            oldDate = year + month + dayOfWeek
             oldStart = intent.getStringExtra("BOOK_S")!!
             oldEnd = intent.getStringExtra("BOOK_E")!!
             oldRoom = intent.getStringExtra("ROOM")!!
@@ -124,15 +124,19 @@ class Reserve_onTime : AppCompatActivity() {
             val roomNumber = re_spi_room.selectedItemPosition + 1   //選択中予約部屋番号
 
             //遷移先で読み込む用に日付、予約開始時間、予約終了時間をそれぞれ纏める
-            val resDate = year + month?.let { it1 -> Divide(-1).format02(it1.toLong()) } + dayOfWeek?.let { it2 -> Divide(-1).format02(it2.toLong()) }
+            val resDate = year + month?.let { it1 -> "%02d".format(it1.toLong()) } + dayOfWeek?.let { it2 -> "%02d".format(it2.toLong()) }
             val startTime = startHour + startMinute
             val endTime = endHour + endMinute
+
+            val startNum = startTime.toInt()
+            val endNum = endTime.toInt()
 
             //予約開始時間が現在時刻より前の場合にエラーを出すための変数
             val selDt = LocalDateTime.of(year.toInt(), month.toInt(), dayOfWeek.toInt(), startHour.toInt(), startMinute.toInt(), 0)
             val nowDt = LocalDateTime.now()
 
-            if (startTime.toInt() < endTime.toInt() //予約開始時間が予約終了時間より前の時
+            if (startNum < endNum                   //予約開始時間が予約終了時間より前の時
+                    && (endNum - startNum) <= 500   //予約時間が５時間以内の時
                     && selDt > nowDt) {             //予約開始時間が現在時刻より大きい時
                 //各種情報をもって次の画面に遷移する
                 val intent = Intent(this, Reserve_confirmation::class.java)
@@ -149,9 +153,9 @@ class Reserve_onTime : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("予約時間エラー")
-                builder.setMessage("登録しようとしている時間は異常なため、予約できません。")
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
+                builder.setTitle(R.string.rot_error)
+                builder.setMessage(R.string.rot_error_mes)
+                builder.setPositiveButton("OK") { dialog, which -> }
                 builder.show()
             }
         }
@@ -166,13 +170,22 @@ class Reserve_onTime : AppCompatActivity() {
                 val f_year = year.substring(2,4)   //年は下２文字だけ表示させる
                 month = data.getStringExtra("MONTH")!!
                 dayOfWeek = data.getStringExtra("DATE")!!
+                replace02d()
                 day = data.getIntExtra("DAY", 0)
 
                 //取得した日付情報をテキストにして出力
-                rot_date.text = "" + f_year + "年" + month + "月" + dayOfWeek + "日（" + days[day] + "）"
+                rot_date.text = "${f_year}年${month}月${dayOfWeek}日（${days[day]}）"
             }
             judgeUpdate()
         }
+    }
+
+    /**
+     * 月日情報を２桁にするメソッド
+     */
+    private fun replace02d() {
+        if (month.length == 1) month = "0$month"
+        if (dayOfWeek.length == 1) dayOfWeek = "0$dayOfWeek"
     }
 
     /**
@@ -193,7 +206,7 @@ class Reserve_onTime : AppCompatActivity() {
      */
     private fun setReserves() {
         val dataSnapshot = mySnap.bookSnapshot
-        val sel = setDateForOne()
+        val sel = year + month + dayOfWeek
 
         clearList()
 
@@ -213,7 +226,7 @@ class Reserve_onTime : AppCompatActivity() {
      */
     private fun setForUpdate() {
         val dataSnapshot = mySnap.bookSnapshot
-        val sel = setDateForOne()
+        val sel = year + month + dayOfWeek
 
         clearList()
 
@@ -232,18 +245,6 @@ class Reserve_onTime : AppCompatActivity() {
     }
 
     /**
-     * 日付(月日)が１桁の場合に起こる不具合を回避するためのメソッド
-     */
-    private fun setDateForOne() : String {
-        var month = month
-        var day = dayOfWeek
-        //月日が１桁の時に前に"0"を追加する
-        if (month.length == 1) month = "0$month"
-        if (day.length == 1) day == "0$day"
-        return year + month + day
-    }
-
-    /**
      * listsの中身を初期化するメソッド
      */
     private fun clearList() {
@@ -254,6 +255,7 @@ class Reserve_onTime : AppCompatActivity() {
 
     /**
      * スナップから予約情報を取得して配列に格納するメソッド
+     * param i 配列に格納する予約情報
      * param num Int 部屋番号
      * param startTime Long 予約開始時間
      * param endTime Long 予約終了時間
@@ -275,7 +277,7 @@ class Reserve_onTime : AppCompatActivity() {
     private fun setNull() {
         for (i in lists.indices) {
             if (lists[i].size == 0) {
-                lists[i].add("${getText(R.string.onTime_noReserve)}")
+                lists[i].add("${getText(R.string.rot_noReserve)}")
             }
         }
     }

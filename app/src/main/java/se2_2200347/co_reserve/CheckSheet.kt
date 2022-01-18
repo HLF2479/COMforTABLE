@@ -15,7 +15,7 @@ class CheckSheet : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_sheet)
 
-        title = getText(R.string.check_t)
+        title = getText(R.string.check_tit)
 
         check2.setOnClickListener {
             check2.isChecked = getChecked()

@@ -20,6 +20,7 @@ class Divide(l : Long) {
         val minStart = format02(org / 10000 % 100)
         val hourEnd = format02(org / 100 % 100)
         val minEnd = format02(org % 100)
+
         return "$hourStart:$minStart~$hourEnd:$minEnd"
     }
 
@@ -63,11 +64,20 @@ class Divide(l : Long) {
         val minStart = format02(org / 10000 % 100)
         val hourEnd = format02(org / 100 % 100)
         val minEnd = format02(org % 100)
+
         return "${year}年${month}月${dayOfMonth}日\n${hourStart}時${minStart}分～${hourEnd}時${minEnd}分"
     }
 
     /**
      * 予約日時の情報をフォーマットして返す。主に予約一覧の表示用
+     * param year Long 年
+     * param month String 月
+     * param dayOfMonth String 日
+     * param hourStart String 予約開始時間(時)
+     * param minStart String 予約開始時間(分)
+     * param hourEnd String 予約終了時間(時)
+     * param minEnd String 予約終了時間(分)
+     * param room Long 部屋番号
      */
     fun div17() : String {
         val year = org / 10000000000000
@@ -84,8 +94,7 @@ class Divide(l : Long) {
 
     /**
      * 数値を２桁の文字列にして返す
+     * param l Long １桁か２桁の数値
      */
-    fun format02(l: Long) : String {
-        return "%02d".format(l)
-    }
+    private fun format02(l: Long) : String { return "%02d".format(l) }
 }

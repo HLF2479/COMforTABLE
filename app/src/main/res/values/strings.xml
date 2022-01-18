@@ -1,24 +1,37 @@
 <resources>
     <string name="app_name">COMforTABLE</string>
     <string name="title">Co-Reserve</string>
-    <string name="title_t">タイトル</string>
+    <string name="title_tit">タイトル</string>
     <string name="sys_name">ZOOM部屋\nオンライン予約システム</string>
     <string name="login">ログイン</string>
-    <string name="login_t">ログイン画面</string>
-    <string name="home_t">ホーム</string>
+    <string name="login_tit">ログイン画面</string>
+    <string name="login_error_t">ID、またはパスワードが違います。</string>
+    <string name="login_error_all_t">ID,パスワードを入力してください(半角英数字)</string>
+    <string name="home_tit">ホーム</string>
     <string name="other_log">他端末からのログインがありました。</string>
-    <string name="error_firebase">読み込みに失敗しました。</string>
+    <string name="error_firebase">通信に失敗しました。</string>
     <string name="no_reserve">予約がありません</string>
-    <string name="lo_title">確認</string>
+    <string name="lo_tit">確認</string>
     <string name="logout">ログアウトします。\nよろしいですか？</string>
+    <string name="query_tit">お問い合わせ</string>
+    <string name="query_sub">件名：</string>
+    <string name="query_body">お問い合わせ内容：</string>
+    <string name="query_btn">確認</string>
+    <string name="query_sub_tit">送信確認</string>
+    <string name="query_send">送信</string>
+    <string name="query_send_t">送信しました。</string>
+    <string name="cancel">キャンセル</string>
+    <string name="query_error_tit">入力項目エラー</string>
+    <string name="query_error_mes">未入力の項目があります。</string>
     <string name="attention">
         ・このアプリは、４号館にあるオンライン会議などで利用できる個室を予約するためのものです。\n
-        ・部屋は予約時間から利用可能になるため、時間に余裕をもって予約するようにしてください。\n
+        ・部屋は予約開始時間から利用可能になるため、時間に余裕をもって予約するようにしてください。\n
+        ・一度の利用で予約できる時間は最大で５時間までです。それ以上の時間を予約することはできないのでご注意ください。\n
         ・なにか問題が起こりましたら、進路指導課(TEL:06-6376-4733)までご連絡ください。
     </string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
-    <string name="att_title">注意事項</string>
+    <string name="att_tit">注意事項</string>
     <string name="home">さん</string>
     <string name="number">学籍番号：</string>
     <string name="reserved">次回予約</string>
@@ -28,7 +41,7 @@
     <string name="home_list">一覧</string>
     <string name="home_entry">入室</string>
     <string name="home_lock">ロック</string>
-    <string name="er_title">予約数オーバー</string>
+    <string name="er_tit">予約数オーバー</string>
     <string name="error_reserve">
         予約数が３件に到達しています。\n
         これ以上は予約できません。
@@ -40,25 +53,27 @@
         ロックボタンは、入室の処理が完了すると使用可能になります。
     </string>
     <string name="error_lock2">部屋の利用時間外です。</string>
-    <string name="reserve_t1">日付選択</string>
+    <string name="reserve_tit">日付選択</string>
     <string name="reserve_1">日付を選んでください</string>
-    <string name="reserve_t2">時間選択</string>
-    <string name="onTime_noReserve">予約はありません。</string>
-    <string name="reserve_t3">最終確認</string>
-    <string name="reserve_t3e">予約情報エラー</string>
-    <string name="reserve_t3u">更新確認</string>
-    <string name="confirm_def">
+    <string name="rot_tit">時間選択</string>
+    <string name="rot_noReserve">予約はありません。</string>
+    <string name="rot_error">予約時間エラー</string>
+    <string name="rot_error_mes">登録しようとしている時間は異常なため、予約できません。</string>
+    <string name="rcf_tit">最終確認</string>
+    <string name="rcf_tit_e">予約情報エラー</string>
+    <string name="rcf_tit_u">更新確認</string>
+    <string name="rcf_def">
         RoomXに〇〇月〇〇日△△時◇◇分で予約します。\n
         よろしいですか？
     </string>
-    <string name="confirm_roomError">部屋番号が異常です。</string>
-    <string name="confirm_resError">
+    <string name="rcf_roomError">部屋番号が異常です。</string>
+    <string name="rcf_resError">
         予約件数がいっぱいです。\n
         既に予約している分が完了してから再度お試しください。
     </string>
-    <string name="reserve_t4s">予約完了</string>
-    <string name="reserve_t4u">更新完了</string>
-    <string name="commit_ok">
+    <string name="rco_tit_s">予約完了</string>
+    <string name="rco_tit_u">更新完了</string>
+    <string name="rco_ok">
         予約が完了しました。\n
         予約した部屋は、開始時間が過ぎてから利用できます。
     </string>
@@ -66,16 +81,18 @@
         予約を更新しました。\n
         予約した部屋は、開始時間が過ぎてから利用できます。
     </string>
-    <string name="reserve_t4e">予約失敗</string>
-    <string name="commit_ng">
+    <string name="rco_tit_e">予約失敗</string>
+    <string name="rco_ng">
         予約時間が重複していたため予約できませんでした。\n
         申し訳ありません。
     </string>
-    <string name="list_t">予約一覧</string>
+    <string name="list_tit">予約一覧</string>
     <string name="list_def">ここに日時と部屋番号が表示されるよ</string>
     <string name="update">更新</string>
     <string name="list_del">取消</string>
-    <string name="reader_t">ＱＲコード読み取り</string>
+    <string name="la_cancel">予約取消</string>
+    <string name="la_cancel_mes">予約を取り消しました</string>
+    <string name="reader_tit">ＱＲコード読み取り</string>
     <string name="attention_wait">しばらくお待ちください…</string>
     <string name="attention_ok">
         ・扉は終了時間の５分後に自動でロックされますが、退室時には利用した方が施錠するようにしてください。\n
@@ -89,16 +106,18 @@
     </string>
     <string name="next">次へ</string>
     <string name="back">戻る</string>
-    <string name="release_t">ロック解除</string>
-    <string name="ok">ok</string>
-    <string name="lock_t">ロック画面</string>
-    <string name="check_t">チェックシート</string>
+    <string name="release_tit">ロック解除</string>
+    <string name="ok">OK</string>
+    <string name="lock_tit">ロック画面</string>
+    <string name="lock_locked">扉をロックしました。</string>
+    <string name="lock_unlocked">ロックを解除しました。</string>
+    <string name="check_tit">チェックシート</string>
     <string name="check1">　室内の電源を全てOFFにしましたか？</string>
     <string name="check2">　扉のロックを掛けましたか？</string>
     <string name="check3">　外の張り紙を外しましたか？</string>
     <string name="check4">　PC、マウス等は除菌しましたか？</string>
     <string name="check_back">ボタンに戻る</string>
-    <string name="quit_t">退出完了</string>
+    <string name="quit_tit">退出完了</string>
     <string name="quit">
         退出が完了しました。\n
         部屋を綺麗にご利用いただき、\n

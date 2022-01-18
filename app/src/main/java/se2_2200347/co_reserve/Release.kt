@@ -14,7 +14,7 @@ class Release : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_release)
 
-        title = getText(R.string.release_t)
+        title = getText(R.string.release_tit)
 
         val roomNumber = intent.getIntExtra("ROOM", -1)
         //予約終了時間をfirebaseにアップする(ESP側で判定する用)

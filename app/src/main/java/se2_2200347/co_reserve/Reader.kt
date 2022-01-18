@@ -22,7 +22,7 @@ class Reader : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reader)
 
-        title = getText(R.string.reader_t)
+        title = getText(R.string.reader_tit)
 
         flag = true
 

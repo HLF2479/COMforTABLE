@@ -10,10 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
+            android:id="@+id/title_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/new_title1" />
+            android:src="@drawable/n_title2" />
     </FrameLayout>
 
     <LinearLayout
@@ -27,16 +28,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-<!--            <ImageView-->
-<!--                android:id="@+id/title_img"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:src="@drawable/title2_b"-->
-<!--                android:scaleType="centerCrop" />-->
-        </LinearLayout>
+            android:layout_weight="1" />
         <LinearLayout
-            android:id="@+id/title_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -45,7 +42,6 @@
                 android:id="@+id/tit_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:text="ログイン"
                 android:textSize="20dp"/>
         </LinearLayout>

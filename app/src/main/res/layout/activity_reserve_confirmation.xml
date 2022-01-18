@@ -22,7 +22,7 @@
                 android:id="@+id/conf_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/confirm_def"
+                android:text="@string/rcf_def"
                 android:textSize="30dp"
                 android:textAlignment="center"/>
         </LinearLayout>

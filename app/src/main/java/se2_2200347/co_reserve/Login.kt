@@ -22,7 +22,7 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        title = getText(R.string.login_t)
+        title = getText(R.string.login_tit)
 
         val sp = getSharedPreferences("STU_DATA", MODE_PRIVATE)
         val editor = sp.edit()
@@ -33,7 +33,7 @@ class Login : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(baseContext, "通信に失敗しました。", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -54,10 +54,10 @@ class Login : AppCompatActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(baseContext, "ID、またはパスワードが違います。", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, R.string.login_error_t, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: NumberFormatException) {
-                Toast.makeText(baseContext, "ID,パスワードを入力してください(半角英数字)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, R.string.login_error_all_t, Toast.LENGTH_SHORT).show()
             }
         }
     }

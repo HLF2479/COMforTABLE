@@ -23,9 +23,8 @@ class List : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
-        title = getText(R.string.list_t)
+        title = getText(R.string.list_tit)
 
-        val count = intent.getIntExtra("COUNT", 0)
         val number = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
         val myBook = bookRef.orderByChild("user_id").equalTo("$number")
 
@@ -50,7 +49,7 @@ class List : AppCompatActivity() {
                     result.add(Divide(element).div17())
                 }
 //                val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, result)
-                val adapter = number?.let { ListAdapter(this@List, result, array, it, count) }
+                val adapter = ListAdapter(this@List, result, array)
                 ListView.adapter = adapter
             }
 

@@ -27,7 +27,7 @@
                 android:id="@+id/commit_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/commit_ng"
+                android:text="@string/rco_ng"
                 android:textSize="26dp"
                 android:textAlignment="center"/>
         </LinearLayout>

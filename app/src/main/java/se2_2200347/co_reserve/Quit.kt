@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_quit.*
 
-private val mySnap = MySnap.getInstance()
 private val firebase = FirebaseReserve()
 
 class Quit : AppCompatActivity() {
@@ -13,7 +12,7 @@ class Quit : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quit)
 
-        title = getText(R.string.quit_t)
+        title = getText(R.string.quit_tit)
 
         val es = getSharedPreferences("ES", MODE_PRIVATE)
 
@@ -21,22 +20,12 @@ class Quit : AppCompatActivity() {
         val key = es.getString("KEY", "")!!
         firebase.sendLog(key)
 
-        //ユーザーtableの予約件数を１つ減らす
-        val snapshot = mySnap.userSnapshot
-        val id = snapshot.key.toString()    //ユーザーIDの取得
-        val count = snapshot.child("counter").value.toString().toInt() - 1   //予約件数の取得
-        firebase.setCount(id, count)
-
         //"end"を初期値に戻すために一時的に加えた処理(最終的にESP側で処理する予定)
         val room = es.getInt("SWITCH", -1)
         firebase.setNine(room)
 
-        //各種内部ストレージ情報をリセット
-        val ed = es.edit()
-        ed.putInt("SWITCH", -1)
-        ed.putInt("END", -1)
-        ed.putString("KEY", "")
-        ed.apply()
+        //入室処理に関わる内部ストレージ情報をリセット
+        es.edit().clear().apply()
 
         quit_btn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

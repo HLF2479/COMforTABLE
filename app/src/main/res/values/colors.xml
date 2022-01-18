@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FFAAAAAA</color>
+    <color name="query">#FFCCCCDD</color>
+    <color name="query2">#FFBBBBCC</color>
     <color name="orange">#FFFF8800</color>
     <color name="green_h">#FFAAFF66</color>
     <color name="green_p">#FF55FF55</color>
