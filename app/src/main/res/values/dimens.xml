@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="title_btn">20dp</dimen>
     <dimen name="home_btn">24dp</dimen>
+    <dimen name="query_tv">18dp</dimen>
+    <dimen name="query_con_tv">24dp</dimen>
+    <dimen name="main_number">20dp</dimen>
+    <dimen name="main_name">28dp</dimen>
+    <dimen name="main_next">22dp</dimen>
+    <dimen name="main_next_kin">84dp</dimen>
+    <dimen name="main_next_none">40dp</dimen>
+    <dimen name="main_getting">40dp</dimen>
+    <dimen name="main_date">27dp</dimen>
+    <dimen name="attention_tv">23dp</dimen>
+    <dimen name="release_tv">23dp</dimen>
+    <dimen name="release_ok">24dp</dimen>
+    <dimen name="rot_sub">28dp</dimen>
+    <dimen name="rot_date">16dp</dimen>
+    <dimen name="rot_time">20dp</dimen>
+    <dimen name="rcf_tv">30dp</dimen>
+    <dimen name="rco_tv">26dp</dimen>
+    <dimen name="list_item">20dp</dimen>
+    <dimen name="lock_tv">30dp</dimen>
+    <dimen name="login_sub">30dp</dimen>
+    <dimen name="login_tv">18dp</dimen>
+    <dimen name="login_btn">20dp</dimen>
+    <dimen name="quit_tv">23dp</dimen>
 </resources>

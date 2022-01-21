@@ -1,85 +1,40 @@
 package se2_2200347.co_reserve
 
-import android.content.ContentValues
-import android.util.Log
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 //firebaseの接続用のリファランスの宣言
 private val database = FirebaseDatabase.getInstance()
-private val testbase = database.getReference()
 private val bookRef = database.getReference("booking")
 private val userRef = database.getReference("users")
 private val lockRef = database.getReference("lock")
 private val logRef = database.getReference("log")
 
-//スナップショットをいろいろなところで用いるために事前に宣言
-private lateinit var snaped : DataSnapshot
-private lateinit var postListener : ValueEventListener
-
 private val mySnap = MySnap.getInstance()
 
 class FirebaseReserve {
 
-    /**  テーブルの細かいデータをまとめて入れるデータクラスfile
-     * date : String 日付
-     * st : String 予約開始時間
-     * ed : String 予約終了時間
-     * room : String 部屋番号
-     * ID : String学籍番号
-     */
-    data class reserve(val date : String? = null , val st : String? = null , val ed : String? = null ,
-                                val room : String? = null , val ID : String? =null ){
-        //Null default values create a no-argument default constructor , which is needed
-        //for deserialization from a DataSnapshot
-    }
-
     /**
-     * データクラスreserveで設定したデータをbookingテーブル配下に挿入するメソッド
+     * 設定したデータをbookingテーブル配下に挿入するメソッド
      * 子要素 a の配下に生成した一意のkey名をvalueに取得する
      */
-    private fun makecheck(res : reserve){
-        testbase.child("booking").push().setValue(res)
-    }
     private fun makeCheck(data: Map<String, String>) {
         bookRef.push().setValue(data)
     }
+
+    /**
+     * 設定したデータをbookingテーブル配下に挿入するメソッド
+     * key名は既にあるものを参照する
+     */
     private fun makeUpdate(data: Map<String, String>, key: String) {
         bookRef.child(key).setValue(data)
     }
+
+    /**
+     * 利用終了したデータををlogテーブル配下に挿入するメソッド
+     * 子要素 a の配下に生成した一意のkey名をvalueに取得する
+     */
     private fun makeLog(data: Map<String, String>) {
         logRef.push().setValue(data)
-    }
-
-
-    //ページを表示時にデータベースの監視を開始するメソッド
-    fun download() {
-        postListener = object : ValueEventListener {
-
-            //データが更新されるたびに細かく呼び出されるところ？
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                //データが更新されるたびにスナップショットを更新保存する
-                snaped = dataSnapshot
-            }
-
-            //データ更新されたときのリスナーがエラー吐いた場合に行われる処理
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-
-        //常時監視する領域の指定（Rootに近くなるほど頻繁に更新されるので重くなる)
-        //似たような箇所を複数監視されると重たいので、リセットしてから宣言のし直し
-        testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
-        testbase.child("booking").orderByChild("book_start").addValueEventListener(postListener)
-    }
-
-    //データベースの監視を終了するメソッド
-    fun watchend(){
-        testbase.child("booking").orderByChild("book_start").removeEventListener(postListener)
     }
 
     /**
@@ -101,7 +56,7 @@ class FirebaseReserve {
         var rooml = arrayListOf<String>()   //部屋番号
 
         val snapshot = mySnap.bookSnapshot
-        //めんどくさくなったので配列にぶち込みました
+        //比較用の予約情報を配列に格納
         for (i in snapshot.children) {
             val iDate = i.child("date").value.toString()    //日付
             val iRoom = i.child("room").value.toString()    //部屋番号
@@ -164,7 +119,7 @@ class FirebaseReserve {
         var key = ""    //更新時に削除する予約のキー値を格納する変数
 
         val snapshot = mySnap.bookSnapshot
-        //めんどくさくなったので配列にぶち込みました
+        //比較する予約情報を配列に格納
         for (i in snapshot.children) {
             val iDate = i.child("date").value.toString()        //日付
             var iStart = i.child("book_start").value.toString() //開始時間
@@ -182,7 +137,6 @@ class FirebaseReserve {
             }
         }
 
-//        val regs = reserve(date , st.toString() , ed.toString() , room , ID)
         //送信用データ配列
         val regs = mapOf (
                 "date" to date,

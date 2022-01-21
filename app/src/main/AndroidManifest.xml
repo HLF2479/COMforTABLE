@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/icon_r"
         android:supportsRtl="true"
         android:theme="@style/Theme.CoReserve">
-        <activity android:name=".Query"></activity>
+        <activity android:name=".QueryConfirm"></activity>
+        <activity android:name=".Query" />
         <activity android:name=".Quit" />
         <activity android:name=".CheckSheet" />
         <activity android:name=".LockUnlock" />

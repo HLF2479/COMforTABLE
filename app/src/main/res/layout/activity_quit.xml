@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/quit"
-                android:textSize="23dp" />
+                android:textSize="@dimen/quit_tv" />
         </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

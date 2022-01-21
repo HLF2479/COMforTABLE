@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_title.*
 
 class Title : AppCompatActivity() {
 
+    //タイトル画面の画像表示を変化させるための処理
     private val handler = Handler()
     private var count = 0
     private val scrOn = object : Runnable {

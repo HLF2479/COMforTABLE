@@ -2,9 +2,14 @@
     <string name="app_name">COMforTABLE</string>
     <string name="title">Co-Reserve</string>
     <string name="title_tit">タイトル</string>
+    <string name="title_btn">ログイン</string>
     <string name="sys_name">ZOOM部屋\nオンライン予約システム</string>
     <string name="login">ログイン</string>
     <string name="login_tit">ログイン画面</string>
+    <string name="login_sub_tv">ログインフォーム</string>
+    <string name="login_num_tv">学籍番号：</string>
+    <string name="login_pass_tv">パスワード：</string>
+    <string name="login_btn">ログイン</string>
     <string name="login_error_t">ID、またはパスワードが違います。</string>
     <string name="login_error_all_t">ID,パスワードを入力してください(半角英数字)</string>
     <string name="home_tit">ホーム</string>
@@ -18,8 +23,12 @@
     <string name="query_body">お問い合わせ内容：</string>
     <string name="query_btn">確認</string>
     <string name="query_sub_tit">送信確認</string>
+    <string name="query_con_sub">件名：</string>
+    <string name="query_con_body">本文：</string>
+    <string name="query_con_mes">上記の内容で送信します。\nよろしいですか？</string>
     <string name="query_send">送信</string>
-    <string name="query_send_t">送信しました。</string>
+    <string name="query_send_tit">送信完了</string>
+    <string name="query_send_t">メールを送信しました。</string>
     <string name="cancel">キャンセル</string>
     <string name="query_error_tit">入力項目エラー</string>
     <string name="query_error_mes">未入力の項目があります。</string>
@@ -56,9 +65,14 @@
     <string name="reserve_tit">日付選択</string>
     <string name="reserve_1">日付を選んでください</string>
     <string name="rot_tit">時間選択</string>
+    <string name="rot_sub_tv">時間を選択してください</string>
+    <string name="rot_date_tv">日付を変更する</string>
+    <string name="colon">：</string>
+    <string name="wave">～</string>
     <string name="rot_noReserve">予約はありません。</string>
     <string name="rot_error">予約時間エラー</string>
     <string name="rot_error_mes">登録しようとしている時間は異常なため、予約できません。</string>
+    <string name="rot_btn">確認</string>
     <string name="rcf_tit">最終確認</string>
     <string name="rcf_tit_e">予約情報エラー</string>
     <string name="rcf_tit_u">更新確認</string>
@@ -71,6 +85,7 @@
         予約件数がいっぱいです。\n
         既に予約している分が完了してから再度お試しください。
     </string>
+    <string name="rcf_btn">確認</string>
     <string name="rco_tit_s">予約完了</string>
     <string name="rco_tit_u">更新完了</string>
     <string name="rco_ok">
@@ -109,6 +124,9 @@
     <string name="release_tit">ロック解除</string>
     <string name="ok">OK</string>
     <string name="lock_tit">ロック画面</string>
+    <string name="lock_btn_u">ロック解除</string>
+    <string name="lock_btn_l">ロック</string>
+    <string name="lock_btn_q">退出の準備をする</string>
     <string name="lock_locked">扉をロックしました。</string>
     <string name="lock_unlocked">ロックを解除しました。</string>
     <string name="check_tit">チェックシート</string>
@@ -152,6 +170,4 @@
         <item>room 4</item>
         <item>room 5</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

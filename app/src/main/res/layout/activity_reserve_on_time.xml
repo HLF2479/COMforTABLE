@@ -19,8 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="時間を選択してください"
-                android:textSize="28dp"/>
+                android:text="@string/rot_sub_tv"
+                android:textSize="@dimen/rot_sub"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/rot_date_calendar"
@@ -33,14 +33,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:textSize="16dp"
+                android:textSize="@dimen/rot_date"
                 android:layout_weight="1" />
             <TextView
                 android:id="@+id/rot_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="日付を変更する"
-                android:textSize="16dp"
+                android:text="@string/rot_date_tv"
+                android:textSize="@dimen/rot_date"
                 android:layout_weight="1" />
         </LinearLayout>
         <LinearLayout
@@ -77,8 +77,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="："
-                    android:textSize="20dp"/>
+                    android:text="@string/colon"
+                    android:textSize="@dimen/rot_time"/>
                 <Spinner
                     android:id="@+id/re_start_min"
                     android:layout_width="match_parent"
@@ -90,8 +90,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="～"
-                    android:textSize="20dp"/>
+                    android:text="@string/wave"
+                    android:textSize="@dimen/rot_time"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/re_end_time"
@@ -104,13 +104,13 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/time_reserve_e"
-                    android:textSize="20dp"/>
+                    android:textSize="@dimen/rot_time"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="～"
-                    android:textSize="20dp"/>
+                    android:text="@string/wave"
+                    android:textSize="@dimen/rot_time"/>
                 <Spinner
                     android:id="@+id/re_end_hour"
                     android:layout_width="match_parent"
@@ -123,8 +123,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="："
-                    android:textSize="20dp"/>
+                    android:text="@string/colon"
+                    android:textSize="@dimen/rot_time"/>
                 <Spinner
                     android:id="@+id/re_end_min"
                     android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="確認"/>
+                    android:text="@string/rot_btn"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

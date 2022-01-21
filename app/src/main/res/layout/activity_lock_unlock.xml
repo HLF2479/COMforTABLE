@@ -32,8 +32,8 @@
                 android:id="@+id/unlock_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="ロック解除"
-                android:textSize="30dp"
+                android:text="@string/lock_btn_u"
+                android:textSize="@dimen/lock_tv"
                 android:layout_margin="10dp"/>
         </LinearLayout>
         <LinearLayout
@@ -44,8 +44,8 @@
                 android:id="@+id/lock_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="ロック"
-                android:textSize="30dp"
+                android:text="@string/lock_btn_l"
+                android:textSize="@dimen/lock_tv"
                 android:layout_margin="10dp"/>
         </LinearLayout>
         <LinearLayout
@@ -66,7 +66,7 @@
                     android:id="@+id/quit_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="退出の準備をする" />
+                    android:text="@string/lock_btn_q" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -1,5 +1,6 @@
 package se2_2200347.co_reserve
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -14,16 +15,15 @@ class Query : AppCompatActivity() {
         title = getText(R.string.query_tit)
 
         submit.setOnClickListener {
-            val subject = subject_et.text.toString()
-            val message = body_et.text.toString()
+            val subject = subject_et.text.toString()    //件名取得
+            val message = body_et.text.toString()       //本文取得
             val builder = AlertDialog.Builder(this)
+            //件名と本文が入力されている場合にのみ次の画面に遷移する
             if (subject != "" && message != "") {
-                builder.setTitle(R.string.query_sub_tit)
-                    .setMessage("件名：$subject\n内容：$message\nで送信します。よろしいですか？")
-                    .setPositiveButton(R.string.query_send) { dialog, which ->
-                        Toast.makeText(baseContext, R.string.query_send_t, Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton(R.string.cancel) { dialog, which ->  }
+                val intent = Intent(this, QueryConfirm::class.java)
+                intent.putExtra("SUBJECT", subject)
+                intent.putExtra("MESSAGE", message)
+                startActivity(intent)
             } else {
                 builder.setTitle(R.string.query_error_tit)
                     .setMessage(R.string.query_error_mes)

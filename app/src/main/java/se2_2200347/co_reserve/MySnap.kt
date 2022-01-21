@@ -3,6 +3,9 @@ package se2_2200347.co_reserve
 import android.app.Application
 import com.google.firebase.database.DataSnapshot
 
+/**
+ * グローバル変数
+ */
 class MySnap : Application(){
     lateinit var bookSnapshot : DataSnapshot
     lateinit var userSnapshot: DataSnapshot

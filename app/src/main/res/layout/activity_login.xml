@@ -24,9 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="ログインフォーム"
+                android:text="@string/login_sub_tv"
                 android:textAlignment="center"
-                android:textSize="30dp" />
+                android:textSize="@dimen/login_sub" />
         </LinearLayout>
 
         <LinearLayout
@@ -39,8 +39,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.3"
                 android:gravity="right|center"
-                android:text="学籍番号："
-                android:textSize="18dp"/>
+                android:text="@string/login_num_tv"
+                android:textSize="@dimen/login_tv"/>
             <EditText
                 android:id="@+id/login_num"
                 android:layout_width="match_parent"
@@ -62,8 +62,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.3"
                 android:gravity="right|center"
-                android:text="パスワード："
-                android:textSize="18dp"/>
+                android:text="@string/login_pass_tv"
+                android:textSize="@dimen/login_tv"/>
             <EditText
                 android:id="@+id/login_pass"
                 android:layout_width="match_parent"
@@ -84,8 +84,8 @@
                 android:id="@+id/login_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ログイン"
-                android:textSize="20dp"/>
+                android:text="@string/login_btn"
+                android:textSize="@dimen/login_btn"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -12,8 +12,8 @@ class Reserve_Commit : AppCompatActivity() {
 
         title = getText(R.string.rco_tit_e)
 
-        val ok = intent.getBooleanExtra("OK_FLAG", false)
-        val updateFlag = intent.getBooleanExtra("UPDATE", false)
+        val ok = intent.getBooleanExtra("OK_FLAG", false)           //前Activityで処理が通ったか確認するフラグ
+        val updateFlag = intent.getBooleanExtra("UPDATE", false)    //予約と更新で文章を変化させるためのフラグ
         if (ok && !updateFlag) {
             title = getText(R.string.rco_tit_s)
             commit_tv.text = getText(R.string.rco_ok)

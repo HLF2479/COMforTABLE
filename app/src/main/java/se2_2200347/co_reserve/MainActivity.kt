@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             userRef.child("$number").addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    mySnap.userSnapshot = snapshot
+                    mySnap.userSnapshot = snapshot      //ユーザー情報をグローバル変数に格納
                     val key = snapshot.child("key").value.toString()    //firebase上のキー値
                     val myKey = sp.getString("KEY", "")         //ログイン時に生成されたキー値
                     //firebaseのキー値が変更され、保存してあるものと一致しなくなった時に強制ログアウトする
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
             bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    mySnap.myBooking = snapshot
+                    mySnap.myBooking = snapshot         //ユーザーの予約情報をグローバル変数に格納
                     getNext()
                 }
 
@@ -194,16 +194,18 @@ class MainActivity : AppCompatActivity() {
             val es = getSharedPreferences("ES", MODE_PRIVATE)
             val switch = es.getInt("SWITCH", -1)
             val endKey = es.getInt("END", -1)
-            val snapshot = mySnap.myBooking
-            var reff = arrayListOf<Long>()
+            val snapshot = mySnap.myBooking     //グローバル変数からユーザーの予約情報を取得
+            var reff = arrayListOf<Long>()      //予約情報を格納する配列
+            //ユーザー単位の予約情報を表示用文章に整地して配列に格納
             for (i in snapshot.children) {
-                val date = i.child("date").value.toString().toLong()
+                val date = i.child("date").value.toString().toLong()        //日付
                 var convD = date * 10000
-                val time = i.child("book_start").value.toString().toLong()
+                val time = i.child("book_start").value.toString().toLong()  //予約開始時間
                 convD += time
                 reff.add(convD)
             }
             reff.sort()
+            //現在状態が入室中なら「入室中」を、そうでなければ直近の予約情報を表示する
             if (switch != -1 && endKey != -1) {
                 time_txt.text = getText(R.string.home_entered)
             } else {
@@ -211,10 +213,13 @@ class MainActivity : AppCompatActivity() {
                 time_txt.text = resText[0]
                 date_txt.text = resText[1]
             }
-            time_txt.textSize = 84F
+//            time_txt.textSize = 84F
+            time_txt.textSize = (resources.getDimension(R.dimen.main_next_kin) / resources.displayMetrics.density)
         } catch (e: Exception) {
+            //予約が無い時はエラーを起こすので、専用のメッセージを表示する
             time_txt.text = getText(R.string.no_reserve)
-            time_txt.textSize = 40F
+//            time_txt.textSize = 40F
+            time_txt.textSize = (resources.getDimension(R.dimen.main_next_none) / resources.displayMetrics.density)
             date_txt.text = ""
         }
     }

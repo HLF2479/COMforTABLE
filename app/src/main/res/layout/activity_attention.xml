@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center|start"
                 android:text="@string/attention_wait"
-                android:textSize="23dp"
+                android:textSize="@dimen/attention_tv"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -89,9 +89,10 @@ class Reader : AppCompatActivity() {
     private fun openQRCamera() {
         qr_view.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
+                //部屋番号の割り出し。QRコードがスカスカにならないための処置
                 val resA = result.toString().toInt() / 10000 * 4
                 val resB = result.toString().toInt() % 10000 * 3
-                val room = resB - resA
+                val room = resB - resA  //部屋番号
                 if (result != null && flag) {
                     onPause()
                     flag = false
