@@ -6,6 +6,12 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 import kotlin.concurrent.thread
 
+/**
+ * メール送信用クラスファイル
+ * 参照元：https://qiita.com/nozaki-sankosc/items/3f52c011ffd5db546763
+ * gmailを利用して送信するためgoogleアカウントが必要。
+ * このまま使うとgmailにブロックされるので、googleアカウント側から利用を許容する必要アリ。
+ */
 
 class MailService(s: String, b: String) {
     private val sub = s

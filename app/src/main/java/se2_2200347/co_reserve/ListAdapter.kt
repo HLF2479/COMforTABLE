@@ -15,6 +15,11 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import kotlin.collections.ArrayList
 
+/**
+ * 予約一覧を表示させるためのAdapterを設定するクラスファイル
+ * 参照元：https://qiita.com/DreamHanks/items/6159ec4c296a1a280db9
+ */
+
 class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>): BaseAdapter(){
 
     private val context = context

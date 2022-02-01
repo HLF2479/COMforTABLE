@@ -14,6 +14,11 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import kotlinx.android.synthetic.main.activity_reader.*
 
+/**
+ * QRリーダを起動して読み取るクラスファイル
+ * 参照元：https://shoheohtani.blogspot.com/2019/01/kotlin-qrcode-how-to.html
+ */
+
 class Reader : AppCompatActivity() {
 
     private var flag = true

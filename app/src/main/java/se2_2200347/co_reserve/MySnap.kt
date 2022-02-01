@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 
 /**
  * グローバル変数
+ * 参照元：https://qiita.com/Ritz/items/0f6b34e0fcf6d3cd1ce5
  */
 class MySnap : Application(){
     lateinit var bookSnapshot : DataSnapshot

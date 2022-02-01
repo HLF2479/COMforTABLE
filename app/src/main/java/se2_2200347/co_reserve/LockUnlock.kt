@@ -82,7 +82,8 @@ class LockUnlock : AppCompatActivity() {
      * param data ０か１
      */
     private fun setLock(data: Int) {
-        Toast.makeText(this, R.string.lock_locked, Toast.LENGTH_SHORT).show()
+        val texts = arrayOf(R.string.lock_unlocked, R.string.lock_locked)
+        Toast.makeText(this, texts[data], Toast.LENGTH_SHORT).show()
         handler.post(btnLock)
         lockRef.setValue("$data")
     }
