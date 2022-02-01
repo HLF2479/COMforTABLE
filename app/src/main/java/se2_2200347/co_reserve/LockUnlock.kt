@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isInvisible
 import com.google.firebase.database.DatabaseReference
 import kotlinx.android.synthetic.main.activity_lock_unlock.*
 import com.google.firebase.database.FirebaseDatabase
@@ -15,7 +16,7 @@ class LockUnlock : AppCompatActivity() {
     private val database = FirebaseDatabase.getInstance()
     private val firebase = FirebaseReserve()
 
-    private lateinit var lockRef :DatabaseReference
+    private lateinit var lockRef : DatabaseReference
 
     private var c = 0
     private val flags = listOf(true, false)
@@ -32,6 +33,10 @@ class LockUnlock : AppCompatActivity() {
         }
     }
 
+    private var admin = false
+    private var endKey : Int = 0
+    private var roomNumber : Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lock_unlock)
@@ -39,9 +44,15 @@ class LockUnlock : AppCompatActivity() {
         title = getText(R.string.lock_tit)
 
         val es = getSharedPreferences("ES", MODE_PRIVATE)
-        val endKey = es.getInt("END", -1)
-        val roomNumber = es.getInt("SWITCH", -1)
-        lockRef = database.getReference("lock/$roomNumber/lock")
+        admin = getSharedPreferences("STU_DATA", MODE_PRIVATE).getBoolean("ADMIN", false)
+
+        if (!admin) {
+            endKey = es.getInt("END", -1)
+            roomNumber = es.getInt("SWITCH", -1)
+            lockRef = database.getReference("lock/$roomNumber/lock")
+            lock_room_spi.isInvisible = true
+        } else if (admin)
+            quit_btn.isEnabled = false
 
         //利用時間が過ぎている場合に強制的にホーム画面に戻させる処理をするダイアログ
         val builder = AlertDialog.Builder(this)
@@ -63,12 +74,18 @@ class LockUnlock : AppCompatActivity() {
                 }
 
         unlock_btn.setOnClickListener {
-            if (firebase.getEnabled(roomNumber, endKey)) setLock(0)
-            else builder.show()
+            when {
+                admin -> setLock(0)
+                firebase.getEnabled(roomNumber, endKey) -> setLock(0)
+                else -> builder.show()
+            }
         }
         lock_btn.setOnClickListener {
-            if (firebase.getEnabled(roomNumber, endKey)) setLock(1)
-            else builder.show()
+            when {
+                admin -> setLock(1)
+                firebase.getEnabled(roomNumber, endKey) -> setLock(1)
+                else -> builder.show()
+            }
         }
         quit_btn.setOnClickListener {
             val intent = Intent(this, CheckSheet::class.java)
@@ -85,6 +102,8 @@ class LockUnlock : AppCompatActivity() {
         val texts = arrayOf(R.string.lock_unlocked, R.string.lock_locked)
         Toast.makeText(this, texts[data], Toast.LENGTH_SHORT).show()
         handler.post(btnLock)
+        if (admin)
+            lockRef = database.getReference("lock/${lock_room_spi.selectedItemPosition + 1}/lock")
         lockRef.setValue("$data")
     }
 }

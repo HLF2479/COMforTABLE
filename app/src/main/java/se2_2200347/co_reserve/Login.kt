@@ -49,6 +49,8 @@ class Login : AppCompatActivity() {
                     //内部ストレージに生成した一意キーとIDを保存
                     editor.putString("KEY", key)
                     editor.putString("NUM", number)
+                    if ( "${snapData.child("$number").child("mode").value}" == "admin" )
+                        editor.putBoolean("ADMIN", true)
                     editor.apply()
 
                     //裏のActivityを閉じてホーム画面に遷移

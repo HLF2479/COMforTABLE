@@ -46,6 +46,7 @@
     <string name="reserved">次回予約</string>
     <string name="date_temp">データを取得中…</string>
     <string name="home_entered">入室中</string>
+    <string name="home_admin">管理者モードです</string>
     <string name="home_reserve">予約</string>
     <string name="home_list">一覧</string>
     <string name="home_entry">入室</string>
@@ -55,8 +56,12 @@
         予約数が３件に到達しています。\n
         これ以上は予約できません。
     </string>
+    <string name="error_adm_reserve">
+        管理者モード中は予約できません。
+    </string>
     <string name="error">エラー</string>
     <string name="error_enter">既に入室中です。</string>
+    <string name="error_adm_enter">管理者モード中は入室機能を使えません。</string>
     <string name="error_lock1">
         部屋に入室していません。\n
         ロックボタンは、入室の処理が完了すると使用可能になります。
@@ -129,6 +134,7 @@
     <string name="lock_btn_q">退出の準備をする</string>
     <string name="lock_locked">扉をロックしました。</string>
     <string name="lock_unlocked">ロックを解除しました。</string>
+    <string name="error_adm_lock">管理者モード中は退出処理はできません。</string>
     <string name="check_tit">チェックシート</string>
     <string name="check1">　室内の電源を全てOFFにしましたか？</string>
     <string name="check2">　扉のロックを掛けましたか？</string>

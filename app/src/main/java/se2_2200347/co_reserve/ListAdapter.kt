@@ -20,11 +20,12 @@ import kotlin.collections.ArrayList
  * 参照元：https://qiita.com/DreamHanks/items/6159ec4c296a1a280db9
  */
 
-class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>): BaseAdapter(){
+class ListAdapter(context: Context, userList: ArrayList<String>, DateList: ArrayList<Long>, Admin: Boolean): BaseAdapter(){
 
     private val context = context
     private val userList = userList
     private val dateList = DateList
+    private val admin = Admin
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -36,6 +37,11 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
 
         val updater = view.findViewById<TextView>(R.id.update_tv)   //「更新」のID
         val remover = view.findViewById<TextView>(R.id.remove_tv)   //「取消」のID
+
+        if (admin) {
+            updater.isEnabled = false
+            remover.isEnabled = false
+        }
 
         val date = dateList[position] / 1000000000          //年月日情報
         val bookStart = dateList[position] / 100000 % 10000 //予約開始時間

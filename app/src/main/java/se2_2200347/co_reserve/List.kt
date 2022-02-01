@@ -25,8 +25,11 @@ class List : AppCompatActivity() {
 
         title = getText(R.string.list_tit)
 
-        val number = getSharedPreferences("STU_DATA", MODE_PRIVATE).getString("NUM", "")
-        val myBook = bookRef.orderByChild("user_id").equalTo("$number")
+        val sp = getSharedPreferences("STU_DATA", MODE_PRIVATE)
+        val number = sp.getString("NUM", "")
+        val admin = sp.getBoolean("ADMIN", false)
+        var myBook = bookRef.orderByChild("user_id").equalTo("$number")
+        if (admin) myBook = bookRef.orderByChild("user_id")
 
         myBook.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -49,7 +52,7 @@ class List : AppCompatActivity() {
                     result.add(Divide(element).div17())
                 }
 //                val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, result)
-                val adapter = ListAdapter(this@List, result, array)
+                val adapter = ListAdapter(this@List, result, array, admin)
                 ListView.adapter = adapter
             }
 

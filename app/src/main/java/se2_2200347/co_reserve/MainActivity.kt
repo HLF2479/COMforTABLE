@@ -25,12 +25,15 @@ class MainActivity : AppCompatActivity() {
     private val mySnap = MySnap.getInstance()
     private val firebase = FirebaseReserve()
 
+    private var admin = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val sp = getSharedPreferences("STU_DATA", Context.MODE_PRIVATE)
         val number = sp.getString("NUM", "")
+        admin = sp.getBoolean("ADMIN", false)
         var count = 0
 
         title = getText(R.string.home_tit)
@@ -44,27 +47,47 @@ class MainActivity : AppCompatActivity() {
                     val key = snapshot.child("key").value.toString()    //firebase上のキー値
                     val myKey = sp.getString("KEY", "")         //ログイン時に生成されたキー値
                     //firebaseのキー値が変更され、保存してあるものと一致しなくなった時に強制ログアウトする
-                    if (key == myKey) {
-                        st_num.text = number
-                        st_name.text = snapshot.child("name").value.toString()
-                        count = snapshot.child("counter").value.toString().toInt()
-                    } else {
-                        Toast.makeText(baseContext, R.string.other_log, Toast.LENGTH_SHORT).show()
-                        titleOneWay()
+                    when {
+                        admin -> {
+                            st_num.text = "-"
+                            st_name.text = snapshot.child("name").value.toString()
+                        }
+                        key == myKey -> {
+                            st_num.text = number
+                            st_name.text = snapshot.child("name").value.toString()
+                            count = snapshot.child("counter").value.toString().toInt()
+                        }
+                        else -> {
+                            Toast.makeText(baseContext, R.string.other_log, Toast.LENGTH_SHORT).show()
+                            titleOneWay()
+                        }
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) { Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show() }
             })
 
-            bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    mySnap.myBooking = snapshot         //ユーザーの予約情報をグローバル変数に格納
-                    getNext()
-                }
+            if (admin) {
+                bookRef.orderByChild("user_id").addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        mySnap.myBooking = snapshot         //ユーザーの予約情報をグローバル変数に格納
+                        time_txt.text = getText(R.string.home_admin)
+                        time_txt.textSize = (resources.getDimension(R.dimen.main_next_none) / resources.displayMetrics.density)
+                        date_txt.text = ""
+                    }
 
-                override fun onCancelled(error: DatabaseError) { Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show() }
-            })
+                    override fun onCancelled(error: DatabaseError) { Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show() }
+                })
+            } else if (!admin) {
+                bookRef.orderByChild("user_id").equalTo("$number").addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        mySnap.myBooking = snapshot         //ユーザーの予約情報をグローバル変数に格納
+                        getNext()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) { Toast.makeText(baseContext, R.string.error_firebase, Toast.LENGTH_SHORT).show() }
+                })
+            }
 
             lockRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) { mySnap.lockSnapshot = snapshot }
@@ -73,15 +96,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         btn_reserve.setOnClickListener {
-            if (count >= 3) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle(R.string.er_tit)
-                        .setMessage(R.string.error_reserve)
-                        .setPositiveButton(R.string.ok) { dialog, which ->  }
-                builder.show()
-            } else {
-                val intent = Intent(this, Reserve::class.java)
-                startActivity(intent)
+//            val builder = AlertDialog.Builder(this)
+            when {
+                admin -> {
+                    showDialog("${getText(R.string.error)}", "${getText(R.string.error_adm_reserve)}", "${getText(R.string.ok)}", apply{})
+//                    builder.setTitle(R.string.error)
+//                            .setMessage(R.string.error_adm_reserve)
+//                            .setPositiveButton(R.string.ok) { _, _ -> }
+//                    builder.show()
+                }
+                count >= 3 -> {
+                    showDialog("${getText(R.string.er_tit)}", "${getText(R.string.error_reserve)}", "${getText(R.string.ok)}", apply{})
+//                    builder.setTitle(R.string.er_tit)
+//                            .setMessage(R.string.error_reserve)
+//                            .setPositiveButton(R.string.ok) { dialog, which ->  }
+//                    builder.show()
+                }
+                else -> {
+                    val intent = Intent(this, Reserve::class.java)
+                    startActivity(intent)
+                }
             }
         }
         btn_list.setOnClickListener {
@@ -91,15 +125,26 @@ class MainActivity : AppCompatActivity() {
         btn_entry.setOnClickListener {
             val es = getSharedPreferences("ES", MODE_PRIVATE)
             val switch = es.getInt("SWITCH", -1)
-            if (switch != -1) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle(R.string.error)
-                        .setMessage(R.string.error_enter)
-                        .setPositiveButton(R.string.ok) { dialog, which -> }
-                builder.show()
-            } else {
-                val intent = Intent(this, Reader::class.java)
-                startActivity(intent)
+            when {
+                admin -> {
+                    val objects = apply { Log.d("TEST", "表示できるかテスト") }
+                    showDialog("${getText(R.string.error)}", "${getText(R.string.error_adm_enter)}", "${getText(R.string.ok)}", objects)
+//                    builder.setTitle(R.string.error)
+//                            .setMessage(R.string.error_adm_enter)
+//                            .setPositiveButton(R.string.ok) { _, _ -> }
+//                    builder.show()
+                }
+                switch != -1 -> {
+                    showDialog("${getText(R.string.error)}", "${getText(R.string.error_enter)}", "${getText(R.string.ok)}", apply{})
+//                    builder.setTitle(R.string.error)
+//                            .setMessage(R.string.error_enter)
+//                            .setPositiveButton(R.string.ok) { dialog, which -> }
+//                    builder.show()
+                }
+                else -> {
+                    val intent = Intent(this, Reader::class.java)
+                    startActivity(intent)
+                }
             }
         }
         btn_lock.setOnClickListener {
@@ -107,12 +152,17 @@ class MainActivity : AppCompatActivity() {
             val switch = es.getInt("SWITCH", -1)
             val end = es.getInt("END", -1)
             when {
+                admin -> {
+                    val intent = Intent(this, LockUnlock::class.java)
+                    startActivity(intent)
+                }
                 switch == -1 -> {
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle(R.string.error)
-                            .setMessage(R.string.error_lock1)
-                            .setPositiveButton(R.string.ok) { dialog, which -> }
-                    builder.show()
+                    showDialog("${getText(R.string.error)}", "${getText(R.string.error_lock1)}", "${getText(R.string.ok)}", apply{})
+//                    val builder = AlertDialog.Builder(this)
+//                    builder.setTitle(R.string.error)
+//                            .setMessage(R.string.error_lock1)
+//                            .setPositiveButton(R.string.ok) { dialog, which -> }
+//                    builder.show()
                 }
                 !firebase.getEnabled(switch, end) -> {
                     val builder = AlertDialog.Builder(this)
@@ -224,8 +274,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * positiveButtonのみのDialogを生成するメソッド
+     * param title Dialogのタイトル
+     * param message Dialogに表示する文章
+     * param pos positiveButtonに表示する文字
+     * param objects positiveButtonを押した時に行う処理
+     */
+    private fun showDialog(title: String, message: String, pos: String, objects: Any) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(pos) { _, _ -> objects }
+        builder.show()
+    }
+
     override fun onResume() {
         super.onResume()
-        getNext()
+        if (!admin) getNext()
     }
 }
