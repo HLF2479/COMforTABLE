@@ -1,6 +1,5 @@
 package se2_2200347.co_reserve
 
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +8,9 @@ import kotlinx.android.synthetic.main.activity_reserve.*
 import java.util.*
 
 class Reserve : AppCompatActivity() {
+
+    private val dialog = ShowDialog(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve)
@@ -32,11 +34,9 @@ class Reserve : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_WEEK)
             if (day == Calendar.SUNDAY) {
                 //選択した日付が日曜日なら、予約できない旨を出力して処理を終える
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("エラー")
-                builder.setMessage("この日は日曜日なので選択できません")
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> })
-                builder.show()
+                dialog.getP(
+                    "${getText(R.string.error)}", "${getText(R.string.reserve_error_sun)}",
+                    "${getText(R.string.ok)}") {}
             } else if (frFlag){
                 //onTimeクラスから遷移してきた場合、選択した日付情報をもってonTimeクラスに戻る
                 val intent = Intent().apply {

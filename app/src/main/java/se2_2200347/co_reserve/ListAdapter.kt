@@ -1,6 +1,5 @@
 package se2_2200347.co_reserve
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -26,6 +25,7 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
     private val userList = userList
     private val dateList = DateList
     private val admin = Admin
+    private val dialog = ShowDialog(context)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -84,16 +84,15 @@ class ListAdapter(context: Context, userList: ArrayList<String>, DateList: Array
         }
 
         remover.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(R.string.la_cancel)
-                    .setMessage("${reserve}の予約を取り消します。\nよろしいですか？")
-                    .setPositiveButton(R.string.yes){ dialog, which ->
-                        //各ユーザーの予約情報の内、対応したものを削除する
-                        FirebaseReserve().cancel(date, bookStart, room)
-                        Toast.makeText(context, R.string.la_cancel_mes, Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton(R.string.no) { dialog, which ->  }
-            builder.show()
+            val pos = Runnable {
+                //各ユーザーの予約情報の内、対応したものを削除する
+                FirebaseReserve().cancel(date, bookStart, room)
+                Toast.makeText(context, R.string.la_cancel_mes, Toast.LENGTH_SHORT).show()
+            }
+            dialog.getPN(
+                "${context.getText(R.string.la_cancel)}", "${reserve}の予約を取り消します。\nよろしいですか？",
+                "${context.getText(R.string.yes)}", pos,
+                "${context.getText(R.string.no)}", {})
         }
 
         return view

@@ -69,6 +69,7 @@
     <string name="error_lock2">部屋の利用時間外です。</string>
     <string name="reserve_tit">日付選択</string>
     <string name="reserve_1">日付を選んでください</string>
+    <string name="reserve_error_sun">この日は日曜日なので選択できません</string>
     <string name="rot_tit">時間選択</string>
     <string name="rot_sub_tv">時間を選択してください</string>
     <string name="rot_date_tv">日付を変更する</string>

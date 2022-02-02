@@ -24,6 +24,8 @@ private val mySnap = MySnap.getInstance()
 
 class Reserve_onTime : AppCompatActivity() {
 
+    private val dialog = ShowDialog(this)
+
     //「更新」時に更新元の予約時間と部屋番号を埋め込む処理
     private val handler = Handler()
     private val setOrigin = Runnable {
@@ -152,11 +154,9 @@ class Reserve_onTime : AppCompatActivity() {
                 }
                 startActivity(intent)
             } else {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle(R.string.rot_error)
-                builder.setMessage(R.string.rot_error_mes)
-                builder.setPositiveButton("OK") { dialog, which -> }
-                builder.show()
+                dialog.getP(
+                    "${getText(R.string.rot_error)}", "${getText(R.string.rot_error_mes)}",
+                    "${getText(R.string.ok)}") {}
             }
         }
     }
